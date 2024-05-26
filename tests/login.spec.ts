@@ -107,6 +107,7 @@ test.describe('User login to Demobank', () => {
     await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').click();
     await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').fill('s');
     await page.locator('input[type="password"]').click();
+    //test dla commita
     await page.locator('input[type="password"]').fill('12345678');
     await page.locator('input[type="password"]').press('Enter');
     await page.locator('.egs-cc-components-Select__input-container').click();
