@@ -79,8 +79,6 @@ export class AccountPage {
     addToCard: Locator;     postcode: Locator;
     myCard: Locator;        townCity: Locator;
 
-   
-
     constructor(private page: Page) {
 
         
@@ -123,7 +121,7 @@ export class SimpleReservations {
     this.checkoutButton = this.page.getByRole('button', { name: 'Checkout' })
     this.results = this.page.getByTestId('dti-results');
 
-    
+
     this.searchBar = this.page.getByPlaceholder('Search');
     this.searchBarClick = this.page.getByRole('button', { name: '' });
     this.itemBelt = this.page.getByRole('link', { name: 'FITT Belts' });
