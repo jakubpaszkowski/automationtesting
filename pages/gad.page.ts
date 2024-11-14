@@ -122,25 +122,6 @@ export class SimpleReservations {
     this.results = this.page.getByTestId('dti-results');
 
 
-    this.searchBar = this.page.getByPlaceholder('Search');
-    this.searchBarClick = this.page.getByRole('button', { name: '' });
-    this.itemBelt = this.page.getByRole('link', { name: 'FITT Belts' });
-    // await page.getByTestId('login-input').fill(userID);
-    // await page.getByTestId('password-input').fill(userPassword);
-    this.addToCard = this.page.getByRole('button', { name: 'Add to cart' });
-    this.myCard = this.page.getByRole('link', { name: ' My Cart - zł' });
-    this.proceedToCheckout = this.page.getByRole('link', { name: 'Proceed to checkout' });
-    this.firstName = this.page.getByRole('textbox', { name: 'First name *' });
-    this.lastName = this.page.getByRole('textbox', { name: 'Last name *' });
-    this.companyName = this.page.getByRole('textbox', { name: 'Company name (optional)' });
-    this.streetAddress = this.page.getByRole('textbox', { name: 'Street address *' });
-    this.apartmentSuitUnit = this.page.getByRole('textbox', { name: 'Apartment, suite, unit etc. (' });
-    this.postcode = this.page.getByRole('textbox', { name: 'Postcode / ZIP *' });
-    this.townCity = this.page.getByRole('textbox', { name: 'Town / City *' });
-    this.placeOrder = this.page.getByRole('button', { name: 'Place order' });
-    this.accountClick = this.page.getByRole('link', { name: ' Account' });
-    this.logOutClick = this.page.getByRole('link', { name: 'Log out' });
 
-
-
+    
 }};

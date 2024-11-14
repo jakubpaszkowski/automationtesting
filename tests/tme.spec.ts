@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 import { loginData, userTmeID, userPasswordTme } from '../test-data/login-data';
-
 import { LoginPage } from '../pages/tme.page';
 
 // obiekt expect pomaga Nam tworzenie asercję 
@@ -21,7 +20,7 @@ test.describe('User login to Demobank', () => {
     // Arrange
     const userID = loginData.userId;
     const userPassword = loginData.password;
-    const expectedUserName = 'spamtu1+tme';
+    const expectedUserName = 'superadminek';
     
     
 

@@ -62,6 +62,7 @@ export class PaymentPage {
 
 
 export class PaymentPage1 {
+  
   constructor(private page: Page) {}
 
 

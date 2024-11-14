@@ -1,6 +1,3 @@
-
-
-
 export const userID = 'testerLO';
 
 /// to jest obiekt to co widac nizej
@@ -13,18 +10,18 @@ export const loginData = {
 export const userWebuiID = 's';
 
 export const loginWebuiData = {
-    userWebuiID: 's',
+    userWebuiID: 'superadminek',
     password: '12345678',
-    userWebuiIDAdmin: 'admin',
-    passwordAdmin: 'admin111'
+    userWebuiIDAdmin: 'adminsuperadminek',
+    passwordAdmin: '12345678'
 }
 
-export const userTmeID = 'SPAMTU1+TME';
-export const userPasswordTme = 'dlaTme1.';
+export const userTmeID = 'superadminek';
+export const userPasswordTme = '12345678';
 
 export const loginTmeData = {
-    userIDTme: 'SPAMTU1+TME',
-    userPasswordTme: 'dlaTme1.',
+    userIDTme: 'superadminek',
+    userPasswordTme: '12345678',
     
 }
 

@@ -23,12 +23,6 @@ test.describe('Pulpit testy negatywne', () => {
     
   });
 
-
-
-
-
-
-
 test('unsuccessful login with too short username', async ({ page }) => {
     //Arrange
     // const url = 'https://demo-bank.vercel.app/'

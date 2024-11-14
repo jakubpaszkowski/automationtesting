@@ -1,5 +1,3 @@
-// ztf70033@inohm.com
-// czyktostoczyta
 import { test, expect } from '@playwright/test';
 import { LoginPage, AccountPage } from '../pages/sklep-test.page';
 import { loginSklepTestData } from '../test-data/login-data';
@@ -198,23 +196,17 @@ test.describe('User login to sklep-test', () => {
 
     await page.locator('#mobile-menu-trigger').click();
     await page.getByRole('link', { name: 'Catergries ' }).hover();
-    // await page.getByRole('link', { name: 'Catergries ' }).click();
     await page.getByRole('link', { name: 'Shirts' })
     await expect(page.getByRole('link', { name: 'Shirts' })).toBeHidden();
-    // toHaveText("");
 
 
     
     await page.getByRole('link', { name: 'Generic Shop' }).click();
-    // await page.getByRole('link', { name: 'Most Wanted' }).click();
     await expect(page.getByRole('heading', { name: 'Most Wanted' })).toHaveText(/.+/);
-    // await page.getByRole('heading', { name: 'Most Wanted' }).click();
     await page.getByRole('link', { name: 'About Us' }).click();
     await expect(page.getByRole('heading', { name: 'Contact' })).toHaveText(/.+/);
-    // await page.getByRole('heading', { name: 'Contact' }).click();
     await page.getByRole('link', { name: 'Blog' }).click();
     await expect(page.getByRole('heading', { name: 'Nothing Found' })).toHaveText(/.+/);
-    // await page.getByRole('heading', { name: 'Nothing Found' }).click();
 
 
        
