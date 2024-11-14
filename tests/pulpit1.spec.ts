@@ -17,14 +17,17 @@ test.describe('Pulpit tests', () => {
     await page.goto(url);
 
     const loginPage = new LoginPage(page);
-    await loginPage.loginInput.fill(userID);
-    await loginPage.passwordInput.fill(userPassword);
-    await loginPage.loginButton.click();
+    await loginPage.login(userID, userPassword);
+    // await loginPage.loginInput.fill(userID);
+    // await loginPage.passwordInput.fill(userPassword);
+    // await loginPage.loginButton.click();
     
   });
 
 
-  test('successful login with correct credentials', async ({ page }) => {
+  test('successful login with correct credentials',
+    { tag: ["@login", "@smoke", ]},
+    async ({ page }) => {
     // await page.goto('https://demo-bank.vercel.app/');
     // await page.getByTestId('login-input').click();
     const loginPage = new LoginPage(page);
@@ -73,7 +76,9 @@ test.describe('Pulpit tests', () => {
 
 
 
-  test('quick payment with correct data', async ({ page }) => {
+  test('quick payment with correct data',
+    { tag: ["@pulpit", "@integration", ]},
+     async ({ page }) => {
     // Arrange
     // const url = 'https://demo-bank.vercel.app/';
     const expectedUserName = 'Jan Demobankowy';
@@ -109,7 +114,9 @@ test.describe('Pulpit tests', () => {
 
 
 
-  test('successful mobile top-up', async ({ page }) => {
+  test('successful mobile top-up', 
+    { tag: ["@pulpit", "@integration" ]},
+    async ({ page }) => {
     // Arrange
     // const url = 'https://demo-bank.vercel.app/';
     // const userID = 'testerLO';
@@ -145,7 +152,9 @@ test.describe('Pulpit tests', () => {
 
   });
 
-  test('correct balance after successful mobile top-up', async ({ page }) => {
+  test('correct balance after successful mobile top-up', 
+    { tag: ["@pulpit", "@integration", ]},
+    async ({ page }) => {
     // Arrange
     // const url = 'https://demo-bank.vercel.app/';
     // const userID = 'testerLO';
@@ -183,7 +192,9 @@ test.describe('Pulpit tests', () => {
 
   });
 
-  test('unsuccessful login with too short password', async ({ page }) => {
+  test('unsuccessful login with too short password', 
+    { tag: ["@login", "@smoke", ]},
+    async ({ page }) => {
     //Arrange
     const url = 'https://demo-bank.vercel.app/';
     // const userID = 'testerLO';

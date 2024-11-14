@@ -20,6 +20,9 @@ if link is broken check https://jaktestowac.pl/lesson/pw1s01l01/
 - view report  
 `npx playwright show-report`
 
+- uzywnie komend do startu testow z konkretnego pliku np. login, webui, etc.
+`npx playwright test tests/login.spec.ts --headed`
+
 ## Playwright Config modifications
 - config file `playwright.config.ts`
 - disable browsers, i.e. Firefox  

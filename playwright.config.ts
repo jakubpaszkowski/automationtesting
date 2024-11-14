@@ -36,14 +36,28 @@ export default defineConfig({
     // baseURL: 'http://127.0.0.1:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-  },
+    trace: 'retain-on-failure',
+    video: 'retain-on-failure',
+    launchOptions: {
+      args: [
+      // "--window-position=0,0",
+      // "--window-size=1920,1080",
+      "--start-maximized",
+    ],
+  }},
+  
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      use: { 
+        // ...devices['Desktop Chrome'],
+        viewport: null, 
+
+      
+       }
+       
     },
 
     // {

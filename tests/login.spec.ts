@@ -1,34 +1,105 @@
 import { test, expect } from '@playwright/test';
+import { loginData } from '../test-data/login-data';
+import { LoginPage } from '../pages/login.page';
+import { PulpitPage } from '../pages/pulpit.page';
 // obiekt expect pomaga Nam tworzenie asercję 
 // czyli sprawdzamy czy wymagany warunek jest spełniony
 
 test.describe('User login to Demobank', () => {
+  test.beforeEach (async ({ page }) => {
+    const url = 'https://demo-bank.vercel.app/';
+    await page.goto(url);
 
+    
+  });
+    
   test('successful login with correct credentials', async ({ page }) => {
-    await page.goto('https://demo-bank.vercel.app/');
+    // Arrange
+    const userID = loginData.userId;
+    const userPassword = loginData.userPassword;
+    const expectedUserName = 'Jan Demobankowy';
+    
+    // Act go to w hooku przed testem zainicjowana w test.beforeEach
+    // await page.goto(url);
     // await page.getByTestId('login-input').click();
-    await page.getByTestId('login-input').fill('testerLO');
-    await page.getByTestId('login-input').press('Tab');
-    await page.getByTestId('password-input').click();
-    await page.getByTestId('password-input').fill('12345678');
-    await page.getByTestId('login-button').click();
-    await page.getByTestId('user-name').click();
-    await expect(page.getByTestId('user-name')).toHaveText('Jan Demobankowy');
+    // await page.getByTestId('login-input').fill(userID);
+
+    const loginPage = new LoginPage(page);
+    await loginPage.loginInput.fill(userID);
+    await loginPage.passwordInput.fill(userPassword);
+    await loginPage.loginButton.click();
+
+    // await page.getByTestId('login-input').press('Tab');
+    // await page.getByTestId('password-input').click();
+    // await page.getByTestId('password-input').fill(userPassword);
+    // await page.getByTestId('login-button').click();
+    // await page.getByTestId('user-name').click();
+    //Assert
+    await expect(page.getByTestId('user-name')).toHaveText(expectedUserName);
   });
 
   test('unsuccessful login with too short username', async ({ page }) => {
-    await page.goto('https://demo-bank.vercel.app/');
-    await page.getByTestId('login-input').click();
-    await page.getByTestId('login-input').fill('tester');
-    await page.getByTestId('password-input').click();
-    await page.getByTestId('error-login-id').click();
+   // Act go to w hooku przed testem zainicjowana w test.beforeEach
+    // await page.goto(url);
 
-    await expect(page.getByTestId('error-login-id')).toHaveText('identyfikator ma min. 8 znaków');
+    const userId = loginData.userId;
+    const incorrectPassword = '12345';
+    const incorrectUserId = 'tester';
+    const expectedErrorMessage = 'identyfikator ma min. 8 znaków';
+    // await page.getByTestId('login-input').click();
+    // await page.getByTestId('login-input').fill(userId);
+    // await page.getByTestId('password-input').click();
+
+
+
+    const loginPage = new LoginPage(page);
+    await loginPage.loginInput.fill(incorrectUserId);
+    await loginPage.passwordInput.click();
+
+    // Assert
+    await expect(loginPage.loginError).toHaveText(expectedErrorMessage);
+    // const loginPage = new LoginPage(page);
+    // await loginPage.loginInput.fill(incorrectUserId);
+    // await page.getByTestId('password-input').fill(incorrectPassword);
+    // await page.getByTestId('password-input').blur();
+
+    // await expect(page.getByTestId('error-login-password')).toHaveText(expectedErrorMessage);
   });
 
   test('unsuccessful login with too short password', async ({ page }) => {
+   
+   // Arrange
+   const userId = loginData.userId;
+   const incorrectPassword = '1234';
+   const expectedErrorMessage = 'hasło ma min. 8 znaków';
+
+   // Act
+   const loginPage = new LoginPage(page);
+   await loginPage.loginInput.fill(userId);
+   await loginPage.passwordInput.fill(incorrectPassword);
+   await loginPage.passwordInput.blur();
+
+   // Assert
+   await expect(loginPage.passwordError).toHaveText(expectedErrorMessage);
+   
+    // //zmieniajac na test.only wykona nam tylko ten jeden test
+    // // Act go to w hooku przed testem zainicjowana w test.beforeEach
+    // // await page.goto(url);
+    // await page.getByTestId('login-input').click();
+    // await page.getByTestId('login-input').fill('testerLO');
+    // await page.getByTestId('password-input').click();
+    // await page.getByTestId('password-input').fill('12345');
+    // await page.getByTestId('password-input').blur();
+    // // await page.locator('#login_password_container label').click();
+    // //await page.getByTestId('error-login-id').click();
+
+    // await expect(page.getByTestId('error-login-password')).toHaveText('hasło ma min. 8 znaków');
+  });
+
+  test('unsuccessful login with too short password1', async ({ page }) => {
     //zmieniajac na test.only wykona nam tylko ten jeden test
-    await page.goto('https://demo-bank.vercel.app/');
+    // Act go to w hooku przed testem zainicjowana w test.beforeEach
+    // await page.goto(url);
     await page.getByTestId('login-input').click();
     await page.getByTestId('login-input').fill('testerLO');
     await page.getByTestId('password-input').click();
@@ -41,14 +112,16 @@ test.describe('User login to Demobank', () => {
   });
 
   test.use({ignoreHTTPSErrors: true,})
-
+  const userID = 's';
+  const password = '12345678';
+  
   test('test', async ({ page }) => {
-    await page.goto('https://10.10.15.204:8443/');
-
+    await page.goto('https://10.10.15.164:8443/');
+    
     await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').click();
-    await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').fill('s');
+    await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').fill(userID);
     await page.locator('input[type="password"]').click();
-    await page.locator('input[type="password"]').fill('12345678');
+    await page.locator('input[type="password"]').fill(password);
     await page.locator('input[type="password"]').press('Enter');
     await page.locator('.egs-cc-components-Select__input-container').click();
     await page.getByText('Admin', { exact: true }).click();
@@ -101,7 +174,7 @@ test.describe('User login to Demobank', () => {
   });
 
   test.use({ignoreHTTPSErrors: true,})
-  test.only('zmiana_sesji', async ({ page }) => {
+  test('zmiana_sesji', async ({ page }) => {
     await page.goto('https://10.10.15.164:8443/');
 
     await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').click();
@@ -126,5 +199,34 @@ test.describe('User login to Demobank', () => {
     // await page.getByLabel('s/Adminpreparation').getByText('preparation').click();
     await expect(page.locator('#nav-dropdown-session')).toHaveText('preparation');
   });
+
+
+  test.use({ignoreHTTPSErrors: true,})
+  test('stworzenie activity stacka', async ({ page }) => {
+  await page.goto('http://localhost:8181/');
+  // await page.goto('chrome-error://chromewebdata/');
+  // await page.getByText('ERR_CONNECTION_REFUSED').click();
+  // await page.getByText('ERR_CONNECTION_REFUSED').click();
+  await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').click();
+  await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').fill('s');
+  await page.locator('input[type="password"]').click();
+  await page.locator('input[type="password"]').fill('12345678');
+  await page.locator('input[type="password"]').press('Enter');
+  await page.locator('.egs-cc-components-Select__input-container').click();
+  await page.getByText('Admin', { exact: true }).click();
+  await page.getByLabel('CustomForm-finish').click();
+  await page.getByText('mandcops').click();
+  await page.getByRole('button', { name: 'JOIN' }).click();
+  await page.getByRole('button', { name: 'OK' }).click();
+  await page.getByRole('button', { name: '+New widget' }).click();
+  await page.locator('#AddWidgetModal-nameInput').click();
+  await page.locator('#AddWidgetModal-nameInput').fill('activitystacktest1');
+  await page.locator('#AddWidgetModal-nameInput').press('Tab');
+  await page.locator('.new-widget-modal-select > .egs-cc-components-Select__control > .egs-cc-components-Select__value-container > .egs-cc-components-Select__input-container').click();
+  await page.getByText('Activity Stack', { exact: true }).click();
+  await page.locator('div').filter({ hasText: /^ADD$/ }).click();
+  await page.getByRole('button', { name: 'ADD' }).click();
   
+});
+
 });

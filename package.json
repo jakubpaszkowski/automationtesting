@@ -3,7 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:pulpit": "npm run test tests/pulpit.spec.ts",
+    "test:pulpit:headed": "npm run test tests/pulpit.spec.ts -- --headed",
+    "test:login-tests": "npm run test tests/login.spec.ts",
+    "test:login:headed": "npm run test tests/login.spec.ts -- --headed",
+    "test:webui": "npm run test tests/webui.spec.ts",
+    "test:webui:headed": "npm run test tests/webui.spec.ts -- --headed",
+    "test:login": "npx playwright test --grepp \"@login\""
+
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
