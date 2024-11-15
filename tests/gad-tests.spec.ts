@@ -58,7 +58,7 @@ test.describe("Locator filters", () => {
 
     });
     
-    test("simple redervation", async ({ page }) => {
+    test("Simple redervation", async ({ page }) => {
         await page.goto('http://localhost:3000/practice/simple-reservation-v1.html');
 
         const elementsPage = new SimpleReservations(page);

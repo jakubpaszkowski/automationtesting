@@ -144,6 +144,6 @@ export class DisabledElements {
     this.range = this.page.getByTestId('dti-range'); //in tests add fill('52');
     this.date = this.page.getByTestId('dti-date'); //in tests add fill('2024-11-16');
     this.color = this.page.getByTestId('dti-color'); //in tests add click();
-
+    
 
 }};
