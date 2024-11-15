@@ -120,8 +120,30 @@ export class SimpleReservations {
     this.date23102024 = this.page.getByRole('row', { name: '23.10.2024 100$ Reserve' }).getByRole('button');
     this.checkoutButton = this.page.getByRole('button', { name: 'Checkout' })
     this.results = this.page.getByTestId('dti-results');
-
-
-
+ 
+}};
+export class DisabledElements {
     
+    food: Locator;           input: Locator;    color: Locator;
+    date23102024: Locator;   textarea: Locator; buttonId: Locator; 
+    checkoutButton: Locator; dropdown: Locator;
+    results: Locator;        radio: Locator;
+    heading: Locator;        range: Locator;
+    checkbox: Locator;       date: Locator;
+
+
+    constructor(private page: Page) {
+    this.buttonId = this.page.getByTestId('dti-button-element');
+    this.results = this.page.getByTestId('dti-results');
+    this.heading = this.page.getByRole('heading', { name: 'Elements are now: ENABLED -' });
+    this.checkbox = this.page.getByTestId('dti-checkbox'); //in tests add check() method;
+    this.input = this.page.getByTestId('dti-input');
+    this.textarea = this.page.getByTestId('dti-textarea');
+    this.dropdown = this.page.getByTestId('dti-dropdown'); //in tests add selectOption('option2');
+    this.radio = this.page.getByTestId('dti-radio2'); //in tests add check();
+    this.range = this.page.getByTestId('dti-range'); //in tests add fill('52');
+    this.date = this.page.getByTestId('dti-date'); //in tests add fill('2024-11-16');
+    this.color = this.page.getByTestId('dti-color'); //in tests add click();
+
+
 }};
