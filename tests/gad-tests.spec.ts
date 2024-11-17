@@ -140,10 +140,57 @@ test.describe("Locator filters", () => {
   await elementsPage.color.fill(colorToFill);
   await expect.soft(elementsPage.results).toHaveText(colorResults);
 
+  });
 
-      });
+  test("button are no displayed for X seconds, hardcoded", async ({ page }) => {
+    await page.goto('http://localhost:3000/practice/not-displayed-elements-1.html');
+
+    const elementsPage = new DisabledElements(page);
+    const button = elementsPage.buttonId;
+    await button.waitFor({ state: 'visible', timeout: 5000 });
+
+  });
+
+  test("button are no displayed for X seconds dynamic", async ({ page }) => {
+    await page.goto('http://localhost:3000/practice/not-displayed-elements-1.html');
+
+    const elementsPage = new DisabledElements(page);
+    // const button = elementsPage.buttonId;
+    // await button.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Find span element
+  const delayLabel = page.locator('#delayLabel');
+
+  // Wait until element is visible
+  await delayLabel.waitFor({ state: 'visible' });
+
+  // Take element's text
+  const delayText = await delayLabel.textContent();
+
+  // Convert text to number (seconds)
+  const delayInSeconds = parseFloat(delayText || '0');
+
+  // Dynamic waiting (conversion to milliseconds)
+  if (!isNaN(delayInSeconds)) {
+    await page.waitForTimeout(delayInSeconds * 1000);
+    console.log(`Waited for ${delayInSeconds} seconds`);
+  } else {
+    console.error('Invalid delay value in #delayLabel');
+  }
+
+  // Continue testing after dynamic waiting
+   await expect.soft(page.getByRole('heading', { name: 'Elements are now: DISPLAYED -' })).toHaveText(/Elements are now: DISPLAYED - please wait.*/);
+   await elementsPage.buttonId.click();
 
 
+
+
+
+
+
+
+
+  });
   });
 
 });
