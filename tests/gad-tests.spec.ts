@@ -260,5 +260,122 @@ test.describe("Locator filters", () => {
         .soft(elementsPage.results)
         .toHaveText(testConstants.colorResults);
     });
+
+    test("button are not displayed for X seconds and not enabled for Y seconds dynamic", async ({
+      page,
+    }) => {
+      await page.goto(
+        "http://localhost:3000/practice/not-present-disabled-elements-1.html"
+      );
+      const elementsPage = new DisabledElements(page);
+      // const button = elementsPage.buttonId;
+      // await button.waitFor({ state: 'visible', timeout: 5000 });
+
+      // Find span element
+      const delayLabel = page.locator("#delayLabel");
+
+      // Wait until element is visible
+      await delayLabel.waitFor({ state: "visible" });
+      // Wait until the delayLabel element is visible
+      await delayLabel.waitFor({ state: "visible" });
+
+      // Take the element's text
+      const delayText = await delayLabel.textContent();
+
+      // Extract both delay times using a regular expression
+      const delayRegex = /([\d.]+)\[s\] for displayed and ([\d.]+)/;
+      const match = delayText?.match(delayRegex);
+
+      if (match) {
+        const delayForDisplayed = parseFloat(match[1]); // Time to wait for elements to be displayed
+        const delayForEnabled = parseFloat(match[2]); // Time to wait for elements to be enabled
+
+        // Wait for elements to be displayed
+        if (!isNaN(delayForDisplayed)) {
+          await page.waitForTimeout(delayForDisplayed * 1000);
+          console.log(
+            `Waited for ${delayForDisplayed} seconds for elements to be displayed.`
+          );
+        } else {
+          console.error("Invalid delay value for displayed in #delayLabel");
+        }
+
+        // Assert elements are now displayed
+        await expect
+          .soft(
+            page.getByRole("heading", { name: "Elements are now: DISPLAYED -" })
+          )
+          .toHaveText(/.*/);
+
+        // Wait for elements to be enabled
+        if (!isNaN(delayForEnabled)) {
+          const additionalWaitTime =
+            (delayForEnabled - delayForDisplayed) * 1000;
+          if (additionalWaitTime > 0) {
+            await page.waitForTimeout(additionalWaitTime);
+            console.log(
+              `Waited an additional ${
+                additionalWaitTime / 1000
+              } seconds for elements to be enabled.`
+            );
+          }
+        } else {
+          console.error("Invalid delay value for enabled in #delayLabel");
+        }
+
+        // Perform actions on the enabled elements
+        await elementsPage.buttonId.click();
+      } else {
+        console.error("Failed to extract delay values from #delayLabel");
+      }
+      // Continue testing after dynamic waiting
+      await expect
+        .soft(
+          page.getByRole("heading", { name: "Elements are now: DISPLAYED -" })
+        )
+        .toHaveText(/.*/);
+      await elementsPage.buttonId.click();
+      await expect
+        .soft(elementsPage.results)
+        .toHaveText(testConstants.buttonClickedResultText);
+      await elementsPage.checkbox.check();
+      await expect
+        .soft(elementsPage.results)
+        .toHaveText(testConstants.checkboxClickedResultText);
+      await expect.soft(elementsPage.checkbox).toBeChecked();
+      //different method for checkbox
+      await elementsPage.checkbox.setChecked(false);
+      await expect.soft(elementsPage.checkbox).not.toBeChecked();
+      await elementsPage.input.fill(testConstants.textToInput);
+      await elementsPage.input.blur();
+      await expect
+        .soft(elementsPage.results)
+        .toHaveText(testConstants.inputValueText);
+      await elementsPage.textarea.fill(testConstants.textToInput);
+      await elementsPage.textarea.blur();
+      await expect
+        .soft(elementsPage.results)
+        .toHaveText(testConstants.textareaInputValue);
+      await elementsPage.dropdown.selectOption(testConstants.dropdownOption2);
+      await expect
+        .soft(elementsPage.results)
+        .toHaveText(`Selected option: ${testConstants.dropdownOption2}`);
+      await elementsPage.radio.check();
+      await expect
+        .soft(elementsPage.results)
+        .toHaveText(testConstants.textRadioButton2);
+      await elementsPage.range.fill(testConstants.rangeValue);
+      await expect
+        .soft(elementsPage.results)
+        .toHaveText(testConstants.textRangeValue);
+      await elementsPage.date.fill(testConstants.dateToFill);
+      await expect
+        .soft(elementsPage.results)
+        .toHaveText(testConstants.selectedDate);
+      await elementsPage.color.fill(testConstants.colorToFill);
+      await expect
+        .soft(elementsPage.results)
+        .toHaveText(testConstants.colorResults);
+    });
   });
 });
