@@ -6,6 +6,7 @@ import {
   AccountPage,
   SimpleReservations,
   DisabledElements,
+  WeatherTable,
 } from "../pages/gad.page";
 
 test.describe("Locator filters", () => {
@@ -439,49 +440,44 @@ test.describe("Locator filters", () => {
           console.error("Invalid delay value for enabled in #delayLabel");
         }
 
+        // Znajdź pole tekstowe za pomocą lokatora
+        const textarea = await page.getByTestId("dti-textarea");
+        // Ustaw nowy rozmiar pola tekstowego
+        await textarea.evaluate((el) => {
+          (el as HTMLTextAreaElement).style.width = "500px";
+          (el as HTMLTextAreaElement).style.height = "300px";
+        });
+        // Sprawdź, czy rozmiar pola tekstowego został zmieniony
+        const width = await textarea.evaluate(
+          (el) => (el as HTMLTextAreaElement).style.width
+        );
+        const height = await textarea.evaluate(
+          (el) => (el as HTMLTextAreaElement).style.height
+        );
+        expect(width).toBe("500px");
+        expect(height).toBe("300px");
 
+        await elementsPage.buttonId.click();
+        await expect(elementsPage.results).toHaveText(
+          testConstants.buttonClickedResultText
+        );
+        await textarea.evaluate((el) => {
+          (el as HTMLTextAreaElement).style.width = "50px";
+          (el as HTMLTextAreaElement).style.height = "30px";
+        });
+        await textarea.evaluate((el) => {
+          (el as HTMLTextAreaElement).style.width = "500px";
+          (el as HTMLTextAreaElement).style.height = "300px";
+        });
 
-      // Znajdź pole tekstowe za pomocą lokatora
-      const textarea = await page.getByTestId("dti-textarea");
-      // Ustaw nowy rozmiar pola tekstowego
-      await textarea.evaluate((el) => {
-        (el as HTMLTextAreaElement).style.width = "500px";
-        (el as HTMLTextAreaElement).style.height = "300px";
-      });
-      // Sprawdź, czy rozmiar pola tekstowego został zmieniony
-      const width = await textarea.evaluate(
-        (el) => (el as HTMLTextAreaElement).style.width
-      );
-      const height = await textarea.evaluate(
-        (el) => (el as HTMLTextAreaElement).style.height
-      );
-      expect(width).toBe("500px");
-      expect(height).toBe("300px");
+        await expect(elementsPage.buttonId).toBeVisible();
+        await expect(elementsPage.dropdown).toBeHidden();
+        // const rangeSlider = page.getByTestId('dti-textarea');
+        // const sliderPosition = await rangeSlider.boundingBox();
+        // await rangeSlider.dragTo(page.locator('body'), { targetPosition: { x: sliderPosition.x + 50, y: sliderPosition.y } });
+        await elementsPage.buttonId.click();
 
-      await elementsPage.buttonId.click();
-      await expect(elementsPage.results).toHaveText(
-        testConstants.buttonClickedResultText
-      );
-      await textarea.evaluate((el) => {
-        (el as HTMLTextAreaElement).style.width = "50px";
-        (el as HTMLTextAreaElement).style.height = "30px";
-      });
-      await textarea.evaluate((el) => {
-        (el as HTMLTextAreaElement).style.width = "500px";
-        (el as HTMLTextAreaElement).style.height = "300px";
-      });
-
-     
-
-      await expect(elementsPage.buttonId).toBeVisible();
-      await expect(elementsPage.dropdown).toBeHidden();
-      // const rangeSlider = page.getByTestId('dti-textarea');
-      // const sliderPosition = await rangeSlider.boundingBox();
-      // await rangeSlider.dragTo(page.locator('body'), { targetPosition: { x: sliderPosition.x + 50, y: sliderPosition.y } });
-      await elementsPage.buttonId.click();
-
-  
-      await elementsPage.buttonId.click();
+        await elementsPage.buttonId.click();
         // Perform actions on the enabled elements
         await elementsPage.buttonId.click();
       } else {
@@ -537,7 +533,9 @@ test.describe("Locator filters", () => {
         .toHaveText(testConstants.colorResults);
     });
 
-    test("button are not present for X seconds and not enabeld for Y seconds - dynamic", async ({ page }) => {
+    test("button are not present for X seconds and not enabeld for Y seconds - dynamic", async ({
+      page,
+    }) => {
       await page.goto(
         "http://localhost:3000/practice/not-present-disabled-elements-2.html"
       );
@@ -562,11 +560,178 @@ test.describe("Locator filters", () => {
       await handleDelays(page, delays);
 
       await elementsPage.buttonId.click();
-      await expect.soft(elementsPage.results).toHaveText(testConstants.buttonClickedResultText);
-
+      await expect
+        .soft(elementsPage.results)
+        .toHaveText(testConstants.buttonClickedResultText);
     });
 
+    test("TABLE", async ({ page }) => {
+      await page.goto("http://localhost:3000/practice/simple-tables.html");
+      const elementsPage = new DisabledElements(page);
+      const button = elementsPage.buttonId;
+      const temperatureTestId = await page
+        .locator('[data-testid="dti-cell-1-3"]')
+        .textContent();
+      console.log(`Temperature: ${temperatureTestId}`);
+
+      const temperatureId = await page.locator("#cell-1-3").textContent();
+      console.log(`Temperature: ${temperatureId}`);
+
+      // The textContent() method will return text that may contain whitespace characters.
+      // If you want to remove unnecessary spaces, you can use .trim()
+      const temperature = (
+        await page.locator("#cell-1-3").textContent()
+      )?.trim();
+      console.log(`Temperature: ${temperature}`);
+
+      const temperature3rd = await page
+        .locator("tr > td:nth-child(4)")
+        .nth(1)
+        .textContent();
+      console.log(`Temperature: ${temperature3rd}`);
+    });
+
+    test("Weather table all data and 1 specific", async ({ page }) => {
+      await page.goto("http://localhost:3000/practice/simple-tables.html");
+      const elementsPage = new WeatherTable(page);
+      const dates = await page
+        .locator("tr > td:nth-child(1)")
+        .allTextContents();
+      console.log(`All dates: ${dates}`);
+      const specificDate = await page
+        .locator("tr > td:nth-child(1)", { hasText: "2022-01-07" })
+        .textContent();
+      console.log(`Specific date: ${specificDate}`);
+    });
+
+    test("Weather table all weather and 1 specific", async ({ page }) => {
+      await page.goto("http://localhost:3000/practice/simple-tables.html");
+      const elementsPage = new WeatherTable(page);
+      const weather = await page
+        .locator("tr > td:nth-child(2)")
+        .allTextContents();
+      console.log(`All dates: ${weather}`);
+      const specificWeather = await page
+        .locator("tr > td:nth-child(2)", { hasText: "Snowy" })
+        .textContent();
+      console.log(`Specific date: ${specificWeather}`);
+    });
+
+    test("Weather table all temperatures and 1 specific 25C", async ({
+      page,
+    }) => {
+      await page.goto("http://localhost:3000/practice/simple-tables.html");
+      const elementsPage = new WeatherTable(page);
+      const button = elementsPage.buttonId;
+      const dateText = await elementsPage.date20220101.textContent();
+      console.log(`Date: ${dateText}`);
+
+      const temperatures = await page
+        .locator("tr > td:nth-child(3)")
+        .allTextContents();
+      console.log(`All temperatures: ${temperatures}`);
+      const specificTemp = await page
+        .locator("tr > td:nth-child(3)", { hasText: "25°C" })
+        .textContent();
+      console.log(`Specific temperature: ${specificTemp}`);
+    });
+
+    test("Weather table all sunrise - sunset and 1 specific", async ({
+      page,
+    }) => {
+      await page.goto("http://localhost:3000/practice/simple-tables.html");
+      const elementsPage = new WeatherTable(page);
+      const SunriseSunset = await page
+        .locator("tr > td:nth-child(4)")
+        .allTextContents();
+      console.log(`All dates: ${SunriseSunset}`);
+      const specificSunriseSunset = await page
+        .locator("tr > td:nth-child(4)", { hasText: "7:00 AM - 7:00 PM" })
+        .textContent();
+      console.log(`Specific date: ${specificSunriseSunset}`);
+    });
+
+    test("Weather table specific date and temprature", async ({ page }) => {
+      await page.goto("http://localhost:3000/practice/simple-tables.html");
+      const elementsPage = new WeatherTable(page);
+
+      const rowLocator = page.locator("tr", {
+        has: page.locator("td", { hasText: "2022-01-07" }),
+      });
+      const temperature = await rowLocator
+        .locator("td:nth-child(3)")
+        .textContent();
+      console.log(`Temperature for 2022-01-01: ${temperature}`);
+    });
+
+    test("Weather table Forecast", async ({ page }) => {
+      await page.goto(
+        "http://localhost:3000/practice/simple-weather-forecast.html"
+      );
+      const elementsPage = new WeatherTable(page);
+
+      const rowLocator = page.locator("tr", {
+        has: page.locator("td", { hasText: "2024-11-17" }),
+      });
+      const temperature = await rowLocator
+        .locator("td:nth-child(3)")
+        .textContent();
+      const weather = await rowLocator.locator("td:nth-child(2)").textContent();
+
+      const humidity = await rowLocator
+        .locator("td:nth-child(3)")
+        .textContent();
+
+      const dayLenght = await rowLocator
+        .locator("td:nth-child(4)")
+        .textContent();
+
+      const cloudCover = await rowLocator
+        .locator("td:nth-child(5)")
+        .textContent();
+
+      console.log(
+        `Temperature for 2024-11-17: ${weather} ${temperature}°C ${humidity} ${dayLenght} ${cloudCover}`
+      );
 
 
+
+      test("Nested Table acctions", async ({ page }) => {
+        await page.goto(
+          "http://localhost:3000/practice/simple-weather-forecast.html"
+        );
+        const elementsPage = new WeatherTable(page);
+  
+        
+      //nested table
+      await page.goto('http://localhost:3000/practice/simple-nested-table-v1.html');
+      //assertion
+      await page.getByRole('cell', { name: 'Row', exact: true }).click();
+      await page.getByRole('cell', { name: 'Value' }).click();
+      await page.getByRole('cell', { name: 'Action' }).click();
+      await page.getByRole('cell', { name: 'Row 1.0' }).click();
+      
+      await page.getByRole('row', { name: 'Row 1.0 X Row 1 X Click! Row' }).getByRole('button').first().click();
+      await page.getByTestId('dti-results').click();
+      await page.locator('#results-history-container').click();
+      await page.getByRole('row', { name: 'Row 1.0 X Row 1 X Click! Row' }).getByRole('button').nth(1).click();
+      await page.getByRole('row', { name: 'Row 1.0 X Row 1 X Click! Row' }).getByRole('button').nth(2).click();
+      await page.getByTestId('dti-results').click();
+      await page.getByRole('row', { name: 'Row 2.0 Y Row 1 X Row 1 X' }).getByRole('button').first().click();
+      await page.getByRole('row', { name: 'Row 2.0 Y Row 1 X Row 1 X' }).getByRole('button').nth(1).click();
+      await page.getByTestId('dti-results-container').click();
+      await page.getByRole('row', { name: 'Row 2.0 Y Row 1 X Row 1 X' }).getByRole('button').nth(2).click();
+      await page.getByRole('row', { name: 'Row 2.0 Y Row 1 X Row 1 X' }).getByRole('button').nth(3).click();
+      await page.getByTestId('dti-results-container').click();
+      await page.getByRole('row', { name: 'Row 3.0 Z Row 1 X Row 1 X' }).getByRole('button').first().click();
+      await page.getByRole('row', { name: 'Row 3.0 Z Row 1 X Row 1 X' }).getByRole('button').nth(1).click();
+      await page.getByTestId('dti-results-container').click();
+      await page.getByRole('row', { name: 'Row 3.0 Z Row 1 X Row 1 X' }).getByRole('button').nth(2).click();
+      await page.getByRole('row', { name: 'Row 3.0 Z Row 1 X Row 1 X' }).getByRole('button').nth(3).click();
+      await page.getByTestId('dti-results-container').click();
+      await page.getByRole('row', { name: 'Row 3.0 Z Row 1 X Row 1 X' }).getByRole('button').nth(4).click();
+      await page.getByTestId('dti-results').click();
+
+    });
   });
 });

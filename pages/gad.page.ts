@@ -147,3 +147,54 @@ export class DisabledElements {
     
 
 }};
+
+export class WeatherTable {
+    
+    date20220101: Locator;
+    rowLocator: Locator;
+    temperature: Locator; 
+    weather: Locator;
+    humidity: Locator;
+    dayLenght: Locator;
+    cloudCover: Locator;          input: Locator;    color: Locator;
+    date23102024: Locator;   textarea: Locator; buttonId: Locator; 
+    checkoutButton: Locator; dropdown: Locator;
+    results: Locator;        radio: Locator;
+    heading: Locator;        range: Locator;
+    checkbox: Locator;       date: Locator;
+
+
+    constructor(private page: Page) {
+
+        this.rowLocator = this.page.locator("tr", {
+            has: page.locator("td", { hasText: "2024-11-17" }),
+          });
+        //   const temperature = await rowLocator
+        //     .locator("td:nth-child(3)")
+        //     .textContent();
+
+          this.weather = this.page.locator("td:nth-child(2)");
+    
+          this.humidity = this.page.locator("td:nth-child(3)");
+    
+          this.dayLenght = this.page.locator("td:nth-child(4)");
+    
+          this.cloudCover = this.page.locator("td:nth-child(5)");
+
+
+
+    this.date20220101 = this.page.locator("#cell-1-3");
+    page.locator("tr > td:nth-child(4)").nth(1)
+    this.results = this.page.getByTestId('dti-results');
+    this.heading = this.page.getByRole('heading', { name: 'Elements are now: ENABLED -' });
+    this.checkbox = this.page.getByTestId('dti-checkbox'); //in tests add check() method;
+    this.input = this.page.getByTestId('dti-input');
+    this.textarea = this.page.getByTestId('dti-textarea');
+    this.dropdown = this.page.getByTestId('dti-dropdown'); //in tests add selectOption('option2');
+    this.radio = this.page.getByTestId('dti-radio2'); //in tests add check();
+    this.range = this.page.getByTestId('dti-range'); //in tests add fill('52');
+    this.date = this.page.getByTestId('dti-date'); //in tests add fill('2024-11-16');
+    this.color = this.page.getByTestId('dti-color'); //in tests add click();
+    
+
+}};
