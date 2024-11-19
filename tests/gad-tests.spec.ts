@@ -1,13 +1,18 @@
 import { test, expect } from "@playwright/test";
 import { extractDelays, handleDelays } from "../test-data/delayUtils";
-import { testConstants } from "../test-data/gad-test-Constants-data"; //for gad tests
+import {
+  NestedTableConstants,
+  testConstants,
+} from "../test-data/gad-test-Constants-data"; //for gad tests
 import {
   SimpleElements,
   AccountPage,
   SimpleReservations,
   DisabledElements,
   WeatherTable,
+  NestedTable,
 } from "../pages/gad.page";
+import exp from "constants";
 
 test.describe("Locator filters", () => {
   test.beforeEach(async ({ page }) => {
@@ -693,45 +698,62 @@ test.describe("Locator filters", () => {
       console.log(
         `Temperature for 2024-11-17: ${weather} ${temperature}°C ${humidity} ${dayLenght} ${cloudCover}`
       );
-
-
-
-      test("Nested Table acctions", async ({ page }) => {
-        await page.goto(
-          "http://localhost:3000/practice/simple-weather-forecast.html"
-        );
-        const elementsPage = new WeatherTable(page);
-  
-        
-      //nested table
-      await page.goto('http://localhost:3000/practice/simple-nested-table-v1.html');
-      //assertion
-      await page.getByRole('cell', { name: 'Row', exact: true }).click();
-      await page.getByRole('cell', { name: 'Value' }).click();
-      await page.getByRole('cell', { name: 'Action' }).click();
-      await page.getByRole('cell', { name: 'Row 1.0' }).click();
-      
-      await page.getByRole('row', { name: 'Row 1.0 X Row 1 X Click! Row' }).getByRole('button').first().click();
-      await page.getByTestId('dti-results').click();
-      await page.locator('#results-history-container').click();
-      await page.getByRole('row', { name: 'Row 1.0 X Row 1 X Click! Row' }).getByRole('button').nth(1).click();
-      await page.getByRole('row', { name: 'Row 1.0 X Row 1 X Click! Row' }).getByRole('button').nth(2).click();
-      await page.getByTestId('dti-results').click();
-      await page.getByRole('row', { name: 'Row 2.0 Y Row 1 X Row 1 X' }).getByRole('button').first().click();
-      await page.getByRole('row', { name: 'Row 2.0 Y Row 1 X Row 1 X' }).getByRole('button').nth(1).click();
-      await page.getByTestId('dti-results-container').click();
-      await page.getByRole('row', { name: 'Row 2.0 Y Row 1 X Row 1 X' }).getByRole('button').nth(2).click();
-      await page.getByRole('row', { name: 'Row 2.0 Y Row 1 X Row 1 X' }).getByRole('button').nth(3).click();
-      await page.getByTestId('dti-results-container').click();
-      await page.getByRole('row', { name: 'Row 3.0 Z Row 1 X Row 1 X' }).getByRole('button').first().click();
-      await page.getByRole('row', { name: 'Row 3.0 Z Row 1 X Row 1 X' }).getByRole('button').nth(1).click();
-      await page.getByTestId('dti-results-container').click();
-      await page.getByRole('row', { name: 'Row 3.0 Z Row 1 X Row 1 X' }).getByRole('button').nth(2).click();
-      await page.getByRole('row', { name: 'Row 3.0 Z Row 1 X Row 1 X' }).getByRole('button').nth(3).click();
-      await page.getByTestId('dti-results-container').click();
-      await page.getByRole('row', { name: 'Row 3.0 Z Row 1 X Row 1 X' }).getByRole('button').nth(4).click();
-      await page.getByTestId('dti-results').click();
-
     });
+
+    test("Nested table actions", async ({ page }) => {
+      await page.goto(
+        "http://localhost:3000/practice/simple-nested-table-v1.html"
+      );
+      const elementsPage = new NestedTable(page);
+      await elementsPage.row1stRow1stClick.first().click();
+      await expect
+        .soft(elementsPage.resultsHistory)
+        .toHaveText(NestedTableConstants.clickedResultsText);
+      console.log(NestedTableConstants.clickedResultsText);
+
+      await elementsPage.row1stRow1stClick.nth(1).click();
+      await expect
+        .soft(elementsPage.resultsHistory)
+        .toHaveText(NestedTableConstants.clickedResultsText);
+
+        await elementsPage.row1stRow1stClick.nth(2).click();
+        await expect
+          .soft(elementsPage.resultsHistory)
+          .toHaveText(NestedTableConstants.clickedResultsText);
+      console.log(NestedTableConstants.clickedResultsText);
+
+      await elementsPage.row2ndRow1stClick.first().click();
+      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      // await elementsPage.row2ndRow2ndClick.click();
+      await elementsPage.row2ndRow2ndClick.first().click();
+      // await elementsPage.row2ndRow2ndClick.nth(1).click();
+      //is visible?
+      await expect.soft(elementsPage.resultsHistory).toBeVisible();
+      await elementsPage.row2ndRow3rdClick.click();
+      await elementsPage.row2ndRow4thClick.click();
+      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      await expect.soft(elementsPage.resultsHistory).toBeVisible();
+
+      //3rd rows
+      await elementsPage.row3rdRow1stClick.first().click();
+      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      await expect.soft(elementsPage.resultsHistory).toBeVisible();
+      await elementsPage.row3rdRow2ndClick.first().click();
+      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      await expect.soft(elementsPage.resultsHistory).toBeVisible();
+      await elementsPage.row3rdRow3rdClick.first().click();
+      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      await expect.soft(elementsPage.resultsHistory).toBeVisible();
+      await elementsPage.row3rdRow4thClick.click();
+      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      await expect.soft(elementsPage.resultsHistory).toBeVisible();
+      await elementsPage.row3rdRow5thClick.click();
+      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      await expect.soft(elementsPage.resultsHistory).toBeVisible();
+
+
+
+
+      });
   });
 });

@@ -15,3 +15,11 @@ export const testConstants = {
 
 
 };
+
+export const NestedTableConstants = {
+    clickedResultsText: /You clicked the button!.*/,
+    
+
+
+
+};
