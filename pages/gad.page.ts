@@ -253,7 +253,7 @@ export class NestedTable {
     this.row2ndRow2ndClick = this.page.locator('td:nth-child(3) > table > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(2) > td:nth-child(3)');
     this.row2ndRow3rdClick = this.page.locator('tr:nth-child(3) > td:nth-child(3) > table > tbody > tr:nth-child(2) > td:nth-child(3)');
     this.row2ndRow4thClick = this.page.locator('tr:nth-child(3) > td:nth-child(3) > table > tbody > tr:nth-child(3) > td:nth-child(3)');
-    
+
     this.row3rdRow1stClick = this.page.locator('tr:nth-child(4) > td:nth-child(3) > table > tbody > tr > td:nth-child(3) > table > tbody > tr > td:nth-child(3)');
     this.row3rdRow2ndClick = this.page.locator('tr:nth-child(4) > td:nth-child(3) > table > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(2) > td:nth-child(3)');
     this.row3rdRow3rdClick = this.page.locator('td:nth-child(3) > table > tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr > td:nth-child(3)');
@@ -261,5 +261,27 @@ export class NestedTable {
     this.row3rdRow5thClick = this.page.locator('tr:nth-child(4) > td:nth-child(3) > table > tbody > tr:nth-child(3) > td:nth-child(3)');
 
 
+  }
+}
+
+export class SlowLoadedTable {
+  row6: Locator;  row14: Locator;
+  row6Weather: Locator; row14Weather: Locator;
+  row6Temperature: Locator; row14Temperature: Locator;
+  row6Hours: Locator;  row14Hours: Locator;
+
+
+
+  constructor(private page: Page) {
+    
+    this.row6 = this.page.getByTestId('dti-row-6-date');
+    this.row6Weather = this.page.getByTestId('dti-row-6-weather');
+    this.row6Temperature = this.page.getByRole('cell', { name: '-5°C' });
+    this.row6Hours = this.page.getByRole('cell', { name: ':00 AM - 6:00 PM' }); //first();
+    this.row14 = this.page.getByTestId('dti-row-14-date');
+    this.row14Weather = this.page.getByTestId('dti-row-14-weather');
+    this.row14Temperature = this.page.getByRole('cell', { name: '-2°C' });
+    this.row14Hours = this.page.getByRole('cell', { name: ':30 AM - 6:30 PM' })// nth(1).click();
+ 
   }
 }

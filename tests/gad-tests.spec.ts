@@ -11,6 +11,7 @@ import {
   DisabledElements,
   WeatherTable,
   NestedTable,
+  SlowLoadedTable,
 } from "../pages/gad.page";
 import exp from "constants";
 
@@ -716,14 +717,16 @@ test.describe("Locator filters", () => {
         .soft(elementsPage.resultsHistory)
         .toHaveText(NestedTableConstants.clickedResultsText);
 
-        await elementsPage.row1stRow1stClick.nth(2).click();
-        await expect
-          .soft(elementsPage.resultsHistory)
-          .toHaveText(NestedTableConstants.clickedResultsText);
+      await elementsPage.row1stRow1stClick.nth(2).click();
+      await expect
+        .soft(elementsPage.resultsHistory)
+        .toHaveText(NestedTableConstants.clickedResultsText);
       console.log(NestedTableConstants.clickedResultsText);
 
       await elementsPage.row2ndRow1stClick.first().click();
-      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      await expect
+        .soft(elementsPage.resultsHistory)
+        .toHaveText(NestedTableConstants.clickedResultsText);
       // await elementsPage.row2ndRow2ndClick.click();
       await elementsPage.row2ndRow2ndClick.first().click();
       // await elementsPage.row2ndRow2ndClick.nth(1).click();
@@ -731,29 +734,270 @@ test.describe("Locator filters", () => {
       await expect.soft(elementsPage.resultsHistory).toBeVisible();
       await elementsPage.row2ndRow3rdClick.click();
       await elementsPage.row2ndRow4thClick.click();
-      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      await expect
+        .soft(elementsPage.resultsHistory)
+        .toHaveText(NestedTableConstants.clickedResultsText);
       await expect.soft(elementsPage.resultsHistory).toBeVisible();
 
       //3rd rows
       await elementsPage.row3rdRow1stClick.first().click();
-      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      await expect
+        .soft(elementsPage.resultsHistory)
+        .toHaveText(NestedTableConstants.clickedResultsText);
       await expect.soft(elementsPage.resultsHistory).toBeVisible();
       await elementsPage.row3rdRow2ndClick.first().click();
-      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      await expect
+        .soft(elementsPage.resultsHistory)
+        .toHaveText(NestedTableConstants.clickedResultsText);
       await expect.soft(elementsPage.resultsHistory).toBeVisible();
       await elementsPage.row3rdRow3rdClick.first().click();
-      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      await expect
+        .soft(elementsPage.resultsHistory)
+        .toHaveText(NestedTableConstants.clickedResultsText);
       await expect.soft(elementsPage.resultsHistory).toBeVisible();
       await elementsPage.row3rdRow4thClick.click();
-      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      await expect
+        .soft(elementsPage.resultsHistory)
+        .toHaveText(NestedTableConstants.clickedResultsText);
       await expect.soft(elementsPage.resultsHistory).toBeVisible();
       await elementsPage.row3rdRow5thClick.click();
-      await expect.soft(elementsPage.resultsHistory).toHaveText(NestedTableConstants.clickedResultsText);
+      await expect
+        .soft(elementsPage.resultsHistory)
+        .toHaveText(NestedTableConstants.clickedResultsText);
       await expect.soft(elementsPage.resultsHistory).toBeVisible();
+    });
+
+    test("slow loading table content on page", async ({ page }) => {
+      await page.goto(
+        "http://localhost:3000/practice/slowly-loaded-table-1.html"
+      );
+      const elementsPage = new SlowLoadedTable(page);
+
+      // wait for element to be visible
+      const dataLocator = page.getByTestId("dti-row-0-date");
+      await expect(dataLocator).toBeVisible({ timeout: 15000 }); // Timeout 15s for long loading
+      //wait to load last one row before atempt with testing
+      await expect(page.getByTestId("dti-row-14-date")).toHaveText(
+        "2022-01-15"
+      );
+
+      // await page.waitForLoadState('networkidle');
+    });
+
+    test("slow loading table content on page networkidle method", async ({
+      page,
+    }) => {
+      await page.goto(
+        "http://localhost:3000/practice/slowly-loaded-table-1.html"
+      );
+      const elementsPage = new SlowLoadedTable(page);
+      // wait for idle in network
+      await page.waitForLoadState("networkidle");
+
+      const dataLocator = page.getByTestId("dti-row-0-date");
+      // wait for element to be visible
+      await expect(dataLocator).toBeVisible({ timeout: 15000 }); // Timeout 15s for long loading
+      //wait to load last one row before atempt with testing
+      await expect(page.getByTestId("dti-row-14-date")).toHaveText(
+        "2022-01-15"
+      );
+      await expect(elementsPage.row6).toHaveText("2022-01-07");
+      await elementsPage.row6.click();
+      await expect(elementsPage.row6Weather).toHaveText("❄️ Snowy");
+      await elementsPage.row6Weather.click();
+      await expect(elementsPage.row6Weather).toBeVisible();
+      await elementsPage.row6Temperature.click();
+      await elementsPage.row6Hours.first().click();
+
+      // prepare to be shown in console
+      const row6HoursContext = await elementsPage.row6Hours
+        .first()
+        .textContent();
+      console.log(row6HoursContext);
+    });
+
+    test("slow loading table content on page dynamic waiting method", async ({
+      page,
+    }) => {
+      await page.goto(
+        "http://localhost:3000/practice/slowly-loaded-table-1.html"
+      );
+      const elementsPage = new SlowLoadedTable(page);
+      // wait for idle in network
+
+      const rows = page.locator('[data-testid^="dti-row-"]');
+
+      // Poczekaj na elementy
+      await page.waitForSelector('[data-testid^="dti-row-"]');
+
+      // Policz elementy po załadowaniu
+      const rowCount = await rows.count();
+      console.log(`Liczba wierszy: ${rowCount}`);
+
+      const rowTexts: string[] = [];
+      for (let i = 0; i < rowCount; i++) {
+        const rowLocator = rows.nth(i);
+        const rowText = await rowLocator.textContent();
+
+        if (rowText !== null) {
+          rowTexts.push(rowText.trim());
+        }
+      }
+
+      console.log("Teksty w wierszach:", rowTexts);
+
+      console.log(rowCount);
+      console.log(rowTexts);
+      const parentHTML = await page
+        .locator('[data-testid^="dti-row-"]')
+        .first()
+        .locator("..")
+        .innerHTML();
+      console.log(parentHTML);
+    });
+
+    test("visual testing", async ({ page }) => {
+      await page.goto("http://localhost:3000/practice/charts-1.html");
+      const elementsPage = new SlowLoadedTable(page);
+
+      // wait for element to be visible
+      // const dataLocator = page.getByTestId("dti-row-0-date");
+      // await expect(dataLocator).toBeVisible({ timeout: 15000 }); // Timeout 15s for long loading
+      // //wait to load last one row before atempt with testing
+      // await expect(page.getByTestId("dti-row-14-date")).toHaveText(
+      //   "2022-01-15"
+      // );
+
+      await page.goto("http://localhost:3000/practice/charts-1.html");
+      const dataPoint = page.locator("circle").nth(3);
+      await dataPoint.hover();
+
+      await page.getByRole("img").getByText("-06-20").click();
+      // await page.waitForLoadState('networkidle');
+    });
+
+   
 
 
+    test('Debugowanie widoczności elementu', async ({ page }) => {
+      await page.goto('http://localhost:3000/practice/charts-1.html');
+      console.log('Czekam na załadowanie strony...');
+      await page.waitForLoadState('networkidle');
+      
+      // Poczekaj chwilę, aby upewnić się, że wszystkie zasoby są załadowane
+      await page.waitForTimeout(5000); // Poczekaj 5 sekund
+      
+      await page.locator('circle').first().hover();
+      await page.locator('circle').first().click();
+      await page.locator('circle').nth(2).hover();
+      await page.locator('circle').nth(2).click();
 
-
-      });
+      await page.locator('circle').nth(3).hover();
+      await page.locator('circle').nth(3).click();
+      // await page.locator('circle').nth(4).click({
+      //   button: 'right'
+      // });
+      await page.locator('circle').nth(4).dblclick();
+      await page.locator('circle').nth(4).click();
+      await page.locator('circle').nth(3).click();
   });
+  
+
+
+const yearlyMock = {
+  "2020": 0,
+  "2021": 0,
+  "2022": 0,
+  "2023": 0,
+  "2024": 0,
+};
+
+
+
+test('Wskaż punkt na wykresie', async ({ page }) => {
+  // Załaduj stronę wykresu
+  await page.goto('http://localhost:3000/practice/charts-1.html');
+  
+  // Poczekaj na załadowanie strony (lub dostosuj w razie potrzeby)
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(5000); // Poczekaj 5 sekund, aby upewnić się, że zasoby są załadowane
+
+  // Selekcja koła na podstawie współrzędnych cx i cy
+  const cx = "224.5";
+  const cy = "168.3571428571429";
+  const circle = await page.locator(`circle[cx="${cx}"][cy="${cy}"]`);
+
+  await page.locator('circle:nth-child(4)').first().hover();
+  await page.locator('circle:nth-child(4)').first().click();
+  await page.locator('circle:nth-child(4)').nth(2).hover();
+  await page.locator('circle:nth-child(4)').nth(2).click();
+
+  await page.locator('circle:nth-child(4)').nth(3).hover();
+  await page.locator('circle:nth-child(4)').nth(3).click();
+  // await page.locator('circle').nth(4).click({
+  //   button: 'right'
+  // });
+  await page.locator('circle:nth-child(4)').nth(4).dblclick();
+  await page.locator('circle:nth-child(4)').nth(4).click();
+  await page.locator('circle:nth-child(4)').nth(3).click();
+
+  await page.locator('circle:nth-child(4)').click();
+  await page.locator('circle:nth-child(4)').click();
+ 
+  await page.getByRole('img').getByText('-06-20').click();
+  await page.locator('circle').nth(4).click();
+  // Upewnij się, że element jest widoczny
+  await expect(circle).toBeVisible();
+  console.log(`Znaleziono koło w punkcie: cx=${cx}, cy=${cy}`);
+  
+  // Możesz wykonać akcję, np. najechać kursorem na punkt
+  await circle.hover();
+  
+  // Dodatkowo, jeżeli chcesz odczytać współrzędne koła
+  const cxAttribute = await circle.getAttribute('cx');
+  const cyAttribute = await circle.getAttribute('cy');
+  console.log(`Współrzędne punktu: cx=${cxAttribute}, cy=${cyAttribute}`);
+  
+  // Możesz także kliknąć w ten punkt, jeśli to jest wymagane
+  await circle.click();
+  await page.locator('g').filter({ hasText: 'Weather Data' }).locator('rect').click();
+
+    
+
+
+});
+
+  
+    
+test('Debugowanie widoczności elementu2', async ({ page }) => {
+    await page.goto('http://localhost:3000/practice/charts-1.html');
+
+    console.log('Czekam na załadowanie strony...');
+    await page.waitForLoadState('networkidle');
+    await page.waitForFunction(() => document.querySelector('circle'));
+// Oczekiwanie na widoczność kontenera wykresu
+console.log('Czekam na widoczność kontenera wykresu...');
+await page.waitForSelector('.chart-container');
+await page.waitForTimeout(2000); // dodatkowy czas na renderowanie
+
+// Szukanie elementów <circle> z odpowiednim kolorem obramowania
+const circles = page.locator('circle[stroke="#dc3912"]');
+const count = await circles.count();
+console.log('Liczba kół z tym kolorem obramowania:', count);
+
+for (let i = 0; i < count; i++) {
+    const cx = await circles.nth(i).getAttribute('cx');
+    const cy = await circles.nth(i).getAttribute('cy');
+    console.log(`Circle ${i}: cx=${cx}, cy=${cy}`);
+}
+
+if (count === 0) {
+    await page.screenshot({ path: 'debug-element-not-found.png' });
+    throw new Error('Element nie został znaleziony!');
+}
+
+
+
+  });
+})
 });
