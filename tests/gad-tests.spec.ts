@@ -876,128 +876,133 @@ test.describe("Locator filters", () => {
       // await page.waitForLoadState('networkidle');
     });
 
-   
+    test("different css and xpath selectors", async ({ page }) => {
+      await page.goto(
+        "http://localhost:3000/practice/simple-multiple-elements-no-ids.html"
+      );
+      //css
+      await page.locator("#button.my-button[onclick='buttonOnClick()']");
+      await page.locator('button.my-button[onclick="buttonOnClick()"]');
+      await page.locator(
+        "#button.my-button[onclick='buttonOnClick('(Second one!)')]"
+      );
+      await page.locator(
+        "#button.my-button[onclick='buttonOnClick('(Third one!)')]"
+      );
+      //xpath
 
+      // await page.locator("//button[contains(@class, 'my-button') and @onclick='buttonOnClick('(Third one!)')'"]);
+      await page.locator(
+        "//button[contains(@class, 'my-button') and @onclick=\"buttonOnClick('Third one!')\"]"
+      );
 
-    test('Debugowanie widoczności elementu', async ({ page }) => {
-      await page.goto('http://localhost:3000/practice/charts-1.html');
-      console.log('Czekam na załadowanie strony...');
-      await page.waitForLoadState('networkidle');
-      
-      // Poczekaj chwilę, aby upewnić się, że wszystkie zasoby są załadowane
-      await page.waitForTimeout(5000); // Poczekaj 5 sekund
-      
-      await page.locator('circle').first().hover();
-      await page.locator('circle').first().click();
-      await page.locator('circle').nth(2).hover();
-      await page.locator('circle').nth(2).click();
+      await page.locator(
+        '//button[contains(@class, "my-button") and @onclick="buttonOnClick()"]'
+      );
 
-      await page.locator('circle').nth(3).hover();
-      await page.locator('circle').nth(3).click();
-      // await page.locator('circle').nth(4).click({
-      //   button: 'right'
-      // });
-      await page.locator('circle').nth(4).dblclick();
-      await page.locator('circle').nth(4).click();
-      await page.locator('circle').nth(3).click();
+      //css
+      await page.locator(
+        "#button.my-button[style='height: 28px;padding: 0px;margin: 0px;width: 60px;']"
+      );
+      await page.locator(
+        "#button.my-button[onclick='buttonOnClick('(row 2)')']"
+      );
+      await page.locator(
+        "#button.my-button[onclick='buttonOnClick('(row 3)')'']"
+      );
+      //xpath
+      await page.locator(
+        "//button[contains[@class, 'my-button') and @onclick='buttonOnClick('(row 1)')'' "
+      );
+      await page.locator(
+        "//button[contains[@class, 'my-button', and @onclick='buttonOnClick('(row 2)')' "
+      );
+      await page.locator(
+        "//button[contains[@class, 'my-button', and @onclick='buttonOnClick('(row 3)')'"
+      );
+
+      //css
+      await page.locator(
+        "@button.my-button[onclick='buttonOnClick('(row 1)')']"
+      );
+
+      //xpath
+      await page.locator(
+        "//button[contains [@class, 'my-button' and @onclick='buttonOnClick('(row 1)'']"
+      );
+      //css
+      await page.locator(
+        "#button.my-button[onclick='buttonOnClick('(row 2)')']"
+      );
+
+      await page.goto(
+        "http://localhost:3000/practice/simple-multiple-elements-no-ids.html"
+      );
+      await page.getByRole("button", { name: "Click me!" }).click();
+      await page.getByRole("button", { name: "Click me too!" }).click();
+      await page.getByRole("button", { name: "Click here!" }).click();
+      await page.getByRole("button", { name: "Click here!" }).click();
+      await page.goto(
+        "http://localhost:3000/practice/simple-multiple-elements-no-ids.html"
+      );
+      await page
+        .getByRole("row", { name: "Row 1 X Click!" })
+        .getByRole("button")
+        .click();
+      await page
+        .getByRole("row", { name: "Row 2 Y Click!" })
+        .getByRole("button")
+        .click();
+      await page
+        .getByRole("row", { name: "Row 3 Z Click!" })
+        .getByRole("button")
+        .click();
+
+      await page.locator(".my-button tbody tr td").isVisible();
+      await page
+        .getByRole("row", { name: "Row 2 Y Click!" })
+        .getByRole("button")
+        .click();
+      await page.locator("tbody tr td .my-button ").nth(1).click();
+
+      await page.locator("tbody tr td .my-button").nth(2).isVisible();
+      await page.locator("tbody tr td .my-button").nth(2).click();
+    });
+
+    test("Multi tabbing", async ({ page, context }) => {
+      // Arrange:
+      const elementsPage = new SimpleElements(page);
+
+      // Act:
+      await page.goto("http://localhost:3000/practice/");
+
+      // create second tab
+      const newTab = await context.newPage();
+      const elementsNewTab = new SimpleElements(newTab);
+      // go to site
+      await newTab.goto("http://localhost:3000/articles.html");
+
+      //bring first tab with articles to front
+      await newTab.bringToFront();
+      await page.bringToFront();
+      await page.getByText("With IDs").click();
+      await elementsPage.buttonId.isVisible();
+      await elementsPage.buttonId.click();
+      await expect
+        .soft(elementsPage.resultsId)
+        .toHaveText(testConstants.buttonClickedResultText);
+
+      //switching back to second tab
+      await newTab.bringToFront();
+      await newTab.locator('[data-testid="article-57-title"]').click();
+      // Assert in 2 ways
+      await expect
+        .soft(newTab.locator('[data-testid="article-title"]').first())
+        .toHaveAttribute("title", "Myth: Testing is only for finding bugs");
+      await expect
+        .soft(newTab.locator('[data-testid="article-title"]'))
+        .toHaveText("Myth: Testing is only for finding bugs");
+      await page.pause();
+    });
   });
-  
-
-
-const yearlyMock = {
-  "2020": 0,
-  "2021": 0,
-  "2022": 0,
-  "2023": 0,
-  "2024": 0,
-};
-
-
-
-test('Wskaż punkt na wykresie', async ({ page }) => {
-  // Załaduj stronę wykresu
-  await page.goto('http://localhost:3000/practice/charts-1.html');
-  
-  // Poczekaj na załadowanie strony (lub dostosuj w razie potrzeby)
-  await page.waitForLoadState('networkidle');
-  await page.waitForTimeout(5000); // Poczekaj 5 sekund, aby upewnić się, że zasoby są załadowane
-
-  // Selekcja koła na podstawie współrzędnych cx i cy
-  const cx = "224.5";
-  const cy = "168.3571428571429";
-  const circle = await page.locator(`circle[cx="${cx}"][cy="${cy}"]`);
-
-  await page.locator('circle:nth-child(4)').first().hover();
-  await page.locator('circle:nth-child(4)').first().click();
-  await page.locator('circle:nth-child(4)').nth(2).hover();
-  await page.locator('circle:nth-child(4)').nth(2).click();
-
-  await page.locator('circle:nth-child(4)').nth(3).hover();
-  await page.locator('circle:nth-child(4)').nth(3).click();
-  // await page.locator('circle').nth(4).click({
-  //   button: 'right'
-  // });
-  await page.locator('circle:nth-child(4)').nth(4).dblclick();
-  await page.locator('circle:nth-child(4)').nth(4).click();
-  await page.locator('circle:nth-child(4)').nth(3).click();
-
-  await page.locator('circle:nth-child(4)').click();
-  await page.locator('circle:nth-child(4)').click();
- 
-  await page.getByRole('img').getByText('-06-20').click();
-  await page.locator('circle').nth(4).click();
-  // Upewnij się, że element jest widoczny
-  await expect(circle).toBeVisible();
-  console.log(`Znaleziono koło w punkcie: cx=${cx}, cy=${cy}`);
-  
-  // Możesz wykonać akcję, np. najechać kursorem na punkt
-  await circle.hover();
-  
-  // Dodatkowo, jeżeli chcesz odczytać współrzędne koła
-  const cxAttribute = await circle.getAttribute('cx');
-  const cyAttribute = await circle.getAttribute('cy');
-  console.log(`Współrzędne punktu: cx=${cxAttribute}, cy=${cyAttribute}`);
-  
-  // Możesz także kliknąć w ten punkt, jeśli to jest wymagane
-  await circle.click();
-  await page.locator('g').filter({ hasText: 'Weather Data' }).locator('rect').click();
-
-    
-
-
-});
-
-  
-    
-test('Debugowanie widoczności elementu2', async ({ page }) => {
-    await page.goto('http://localhost:3000/practice/charts-1.html');
-
-    console.log('Czekam na załadowanie strony...');
-    await page.waitForLoadState('networkidle');
-    await page.waitForFunction(() => document.querySelector('circle'));
-// Oczekiwanie na widoczność kontenera wykresu
-console.log('Czekam na widoczność kontenera wykresu...');
-await page.waitForSelector('.chart-container');
-await page.waitForTimeout(2000); // dodatkowy czas na renderowanie
-
-// Szukanie elementów <circle> z odpowiednim kolorem obramowania
-const circles = page.locator('circle[stroke="#dc3912"]');
-const count = await circles.count();
-console.log('Liczba kół z tym kolorem obramowania:', count);
-
-for (let i = 0; i < count; i++) {
-    const cx = await circles.nth(i).getAttribute('cx');
-    const cy = await circles.nth(i).getAttribute('cy');
-    console.log(`Circle ${i}: cx=${cx}, cy=${cy}`);
-}
-
-if (count === 0) {
-    await page.screenshot({ path: 'debug-element-not-found.png' });
-    throw new Error('Element nie został znaleziony!');
-}
-
-
-
-  });
-})
 });
