@@ -1004,5 +1004,26 @@ test.describe("Locator filters", () => {
         .toHaveText("Myth: Testing is only for finding bugs");
       await page.pause();
     });
+
+    test("Visual testing ", async ({ page }) => {
+      // Arrange:
+      await page.goto("http://localhost:3000/article.html?id=57");
+      //mask: class="item-card"
+
+      // Act:
+      await expect(page).toHaveScreenshot({
+        mask: [page.locator('[data-testid="article-body"]'), page.locator('[data-testid="article-body"]')],
+      });
+    });
+
+    test("Visual testing just article image", async ({ page }) => {
+      // Arrange:
+      await page.goto("http://localhost:3000/article.html?id=57");
+      // Act:
+      await expect(page.locator("#article-image-container")).toHaveScreenshot(
+        "claudio-schwarz-yJzo1QIl9ug-unsplash.png"
+      );
+      // Assert:
+    });
   });
 });
