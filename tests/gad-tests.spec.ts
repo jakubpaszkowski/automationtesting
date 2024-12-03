@@ -1012,7 +1012,10 @@ test.describe("Locator filters", () => {
 
       // Act:
       await expect(page).toHaveScreenshot({
-        mask: [page.locator('[data-testid="article-body"]'), page.locator('[data-testid="article-body"]')],
+        mask: [
+          page.locator('[data-testid="article-body"]'),
+          page.locator('[data-testid="article-body"]'),
+        ],
       });
     });
 
