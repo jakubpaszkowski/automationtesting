@@ -57,6 +57,7 @@ export default defineConfig({
       },
     },
 
+    /*
     {
       name: "iphone13",
       use: {
@@ -120,6 +121,10 @@ export default defineConfig({
         ...devices["Pixel 7 landscape"],
       },
     },
+
+    */
+
+    
     // {
     //   name: 'firefox',
     //   use: { ...devices['Desktop Firefox'] },

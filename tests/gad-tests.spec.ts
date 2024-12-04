@@ -1,4 +1,6 @@
 import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+
 import { extractDelays, handleDelays } from "../test-data/delayUtils";
 import {
   NestedTableConstants,
@@ -1020,12 +1022,41 @@ test.describe("Locator filters", () => {
     });
 
     test("Visual testing just article image", async ({ page }) => {
-      // Arrange:
-      await page.goto("http://localhost:3000/article.html?id=57");
       // Act:
+      await page.goto("http://localhost:3000/article.html?id=57");
+      // Assert:
       await expect(page.locator("#article-image-container")).toHaveScreenshot(
         "claudio-schwarz-yJzo1QIl9ug-unsplash.png"
       );
+      //with threshold 10%
+      await expect(page.locator("#article-image-container")).toHaveScreenshot(
+        "claudio-schwarz-yJzo1QIl9ug-unsplash.png",
+        { threshold: 0.1 }
+      );
+      //with pixel differences max 500 pixel difference
+      await expect(page.locator("#article-image-container")).toHaveScreenshot(
+        "claudio-schwarz-yJzo1QIl9ug-unsplash.png",
+        { maxDiffPixelRatio: 0.1 }
+      );
+      //both threshold and max diff pixel
+      await expect(page.locator("#article-image-container")).toHaveScreenshot(
+        "claudio-schwarz-yJzo1QIl9ug-unsplash.png",
+        { threshold: 0.1, maxDiffPixelRatio: 0.1 }
+      );
+    });
+
+    test("basic accesibility test", async ({ page }) => {
+      // Arrange:
+      // await page.goto("http://localhost:3000/article.html?id=57");
+
+      // await page.locator("[data-testid='article-title']").waitFor();
+      await page.goto("https://commitquality.com/practice-api");
+      await page.locator(".back-link").waitFor();
+      // Act:
+      // check the whole page
+      const axeBuilder = await new AxeBuilder({ page }).analyze();
+      expect(axeBuilder.violations).toEqual([]);
+
       // Assert:
     });
   });

@@ -13,13 +13,13 @@
     "test:webui": "npm run test tests/webui.spec.ts",
     "test:webui:headed": "npm run test tests/webui.spec.ts -- --headed",
     "test:login": "npx playwright test --grepp \"@login\""
-
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.43.1",
-    "@types/node": "^20.12.7"
+    "@axe-core/playwright": "^4.10.1",
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^22.10.1"
   }
 }
