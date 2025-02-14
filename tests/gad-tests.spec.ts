@@ -16,6 +16,7 @@ import {
   SlowLoadedTable,
 } from "../pages/gad.page";
 import exp from "constants";
+import { faker } from "@faker-js/faker";
 
 test.describe("Locator filters", () => {
   test.beforeEach(async ({ page }) => {
@@ -43,6 +44,50 @@ test.describe("Locator filters", () => {
       await expect
         .soft(elementsPage.resultsId)
         .toHaveText("Input value changed to: testing");
+      await elementsPage.radioButtons1Id.click();
+      await expect
+        .soft(elementsPage.resultsId)
+        .toHaveText("Radio Button 1 clicked!");
+      await page.getByRole("radio").nth(1).click();
+      await expect
+        .soft(elementsPage.resultsId)
+        .toHaveText("Radio Button 2 clicked!");
+      await elementsPage.rangeId.fill("50");
+      await expect
+        .soft(elementsPage.resultsId)
+        .toHaveText("Range value changed to: 50");
+      await elementsPage.colorPaletteId.fill("#02f2d6");
+      await expect
+        .soft(elementsPage.resultsId)
+        .toHaveText(
+          "New selected color: #02f2d6 as hex and in RGB: rgb(2, 242, 214)"
+        );
+    });
+
+    test("Fill options with using faker library", async ({ page }) => {
+      const elementsPage = new SimpleElements(page);
+
+      // using faker library
+      const inputIdToBeFaked = faker.finance.accountNumber();
+
+      await elementsPage.buttonId.click();
+      await expect
+        .soft(elementsPage.resultsId)
+        .toHaveText("You clicked the button!");
+      await elementsPage.checkboxId.click();
+
+      await expect
+        .soft(elementsPage.resultsId)
+        .toHaveText("Checkbox is checked!");
+      await elementsPage.dropDownNoId1.selectOption("option2");
+      await expect
+        .soft(elementsPage.resultsId)
+        .toHaveText("Selected option: option2");
+      await elementsPage.inputId.fill(inputIdToBeFaked);
+      await elementsPage.inputId.blur();
+      await expect
+        .soft(elementsPage.resultsId)
+        .toHaveText(`Input value changed to: ${inputIdToBeFaked}`);
       await elementsPage.radioButtons1Id.click();
       await expect
         .soft(elementsPage.resultsId)

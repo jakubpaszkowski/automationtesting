@@ -14,8 +14,6 @@ test.describe('User login to Demobank', () => {
     
 
 
-
-
   test('successful login with correct credentials', async ({ page }) => {
     // Arrange
     const userID = loginData.userId;
