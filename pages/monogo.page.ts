@@ -11,7 +11,9 @@ export class SimpleElements {
   miniCart: Locator;
   miniCartCheckoutButton: Locator;
   dropDownNoId1: Locator; //use selectOption('option1')
-  
+  loginInput: Locator;
+  passwordInput: Locator;
+  loginButton: Locator;
 
   constructor(private page: Page) {
     this.buttonCookiesAccept = this.page.getByRole("button", { name: "GOT IT" });

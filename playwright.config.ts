@@ -32,6 +32,9 @@ export default defineConfig({
   reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
+    headless: true, // Uruchamia testy w tle
+    viewport: { width: 1920, height: 1080 }, // Ustawia rozdzielczość na Full HD
+
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
 
@@ -52,8 +55,8 @@ export default defineConfig({
     {
       name: "chromium",
       use: {
-        // ...devices['Desktop Chrome'],
-        viewport: null,
+        browserName: "chromium",
+        viewport: { width: 1920, height: 1080 }, // Full HD
       },
     },
 
@@ -61,7 +64,6 @@ export default defineConfig({
     {
       name: "iphone13",
       use: {
-        // ...devices['Desktop Chrome'],
         ...devices["iPhone 13"],
       },
     },
@@ -69,7 +71,6 @@ export default defineConfig({
     {
       name: "iphone13landscape",
       use: {
-        // ...devices['Desktop Chrome'],
         ...devices["iPhone 13 landscape"],
       },
     },
@@ -77,7 +78,6 @@ export default defineConfig({
     {
       name: "iphone11",
       use: {
-        // ...devices['Desktop Chrome'],
         ...devices["iPhone 11"],
       },
     },
@@ -85,7 +85,6 @@ export default defineConfig({
     {
       name: "iphone11landscape",
       use: {
-        // ...devices['Desktop Chrome'],
         ...devices["iPhone 11 landscape"],
       },
     },
@@ -93,7 +92,6 @@ export default defineConfig({
     {
       name: "iphone12landscape",
       use: {
-        // ...devices['Desktop Chrome'],
         ...devices["iPhone 12 landscape"],
       },
     },
@@ -101,7 +99,6 @@ export default defineConfig({
     {
       name: "iphone12",
       use: {
-        // ...devices['Desktop Chrome'],
         ...devices["iPhone 12"],
       },
     },
@@ -109,7 +106,6 @@ export default defineConfig({
     {
       name: "pixel7",
       use: {
-        // ...devices['Desktop Chrome'],
         ...devices["Pixel 7"],
       },
     },
@@ -117,24 +113,27 @@ export default defineConfig({
     {
       name: "pixel7landscape",
       use: {
-        // ...devices['Desktop Chrome'],
         ...devices["Pixel 7 landscape"],
       },
     },
-
-    */
-
     
-    // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    // },
 
-    // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
-    // },
+    {
+      name: "firefox",
+      use: {
+        browserName: "firefox",
+        viewport: { width: 1920, height: 1080 }, // Full HD
+      },
+    },
 
+    {
+      name: "webkit",
+      use: {
+        browserName: "webkit",
+        viewport: { width: 1920, height: 1080 }, // Full HD
+      },
+    },
+    */
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',

@@ -82,21 +82,25 @@ test("Verify if it is possible to add a product to the cart. POM", async ({
   await page
     .getByRole("heading", { name: "Ploom X Advanced Rose Shimmer" })
     .click();
-
-  await elementsPage.buttonAddProduct.click();
-  await elementsPage.cartQuantity.click();
-  await await expect(elementsPage.cartQuantity).toHaveValue("1");
-  await elementsPage.miniCart.click();
-  await elementsPage.miniCart.click();
-  await elementsPage.miniCartCheckoutButton.click();
-
-  await expect(
-    page.locator(".ProductDescription-module-description-y4geg")
-  ).toHaveText(/^A unique Heated Tobacco Xperience/);
-
-  await expect(
-    page.locator('span.Button-module-content-ZY6ar:has-text("Checkout")')
-  ).toBeVisible();
+    if (await elementsPage.buttonAddProduct.isVisible()) {
+      await elementsPage.buttonAddProduct.click();
+      await elementsPage.cartQuantity.click();
+      await expect(elementsPage.cartQuantity).toHaveValue("1");
+      await elementsPage.miniCart.click();
+      await elementsPage.miniCart.click();
+      await elementsPage.miniCartCheckoutButton.click();
+    
+      await expect(
+        page.locator(".ProductDescription-module-description-y4geg")
+      ).toHaveText(/^A unique Heated Tobacco Xperience/);
+    
+      await expect(
+        page.locator('span.Button-module-content-ZY6ar:has-text("Checkout")')
+      ).toBeVisible();
+    } else {
+      throw new Error("The product is not available, test aborted.");
+    }
+    
 });
 
 test("Verify if it is possible to remove a product from the cart.", async ({
@@ -193,7 +197,7 @@ test("Verify if there are any broken links or images on the product page.", asyn
 
   await elementsPage.buttonProductPloomXAdvanced.click();
   await page
-    .getByRole("heading", { name: "Ploom X Advanced Rose Shimmer" })
+    .getByRole("heading", { name: /^Ploom X Advanced Rose Shimmer.*/i })
     .click();
 
   // gather all links from webstie
@@ -214,34 +218,33 @@ test("Verify if there are any broken links or images on the product page.", asyn
     if (fullHref && !fullHref.startsWith("http")) {
       fullHref = "https://www.ploom.co.uk" + fullHref; //all stuff is from this site
 
-    // We check that the URL is absolute and correct
-    try {
-      const url = new URL(fullHref); // validate if url is correct
-      if (url.protocol === "http:" || url.protocol === "https:") {
-        // Use request to check the HTTP status of a link
-        const response = await page.context().request.get(url.toString()); // Make an HTTP request to the link
-        const status = response.status(); //get https status
+      // We check that the URL is absolute and correct
+      try {
+        const url = new URL(fullHref); // validate if url is correct
+        if (url.protocol === "http:" || url.protocol === "https:") {
+          // Use request to check the HTTP status of a link
+          const response = await page.context().request.get(url.toString()); // Make an HTTP request to the link
+          const status = response.status(); //get https status
 
-        // what http status we get?
-        if (status === 200) {
-          console.log(`Link: ${fullHref} - OK (200)`);
-        } else if (status === 404) {
-          console.log(`Link: ${fullHref} - Not Found (404)`);
-        } else if (status === 500) {
-          console.log(`Link: ${fullHref} - Server Error (500)`);
+          // what http status we get?
+          if (status === 200) {
+            console.log(`Link: ${fullHref} - OK (200)`);
+          } else if (status === 404) {
+            console.log(`Link: ${fullHref} - Not Found (404)`);
+          } else if (status === 500) {
+            console.log(`Link: ${fullHref} - Server Error (500)`);
+          } else {
+            console.log(`Link: ${fullHref} - Unexpected Status: ${status}`);
+          }
+
+          // should be 200 http status
+          expect(status).toBe(200);
         } else {
-          console.log(`Link: ${fullHref} - Unexpected Status: ${status}`);
+          console.log(`Link: ${fullHref} incorrect protocol: ${url.protocol}`);
         }
-
-        // should be 200 http status
-        expect(status).toBe(200);
-      } else {
-        console.log(
-          `Link: ${fullHref} incorrect protocol: ${url.protocol}`
-        );
+      } catch (error) {
+        console.log(`Link: ${fullHref} inncorect url`);
       }
-    } catch (error) {
-      console.log(`Link: ${fullHref} inncorect url`);
     }
   }
 
