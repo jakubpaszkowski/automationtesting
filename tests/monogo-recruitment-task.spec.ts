@@ -131,44 +131,56 @@ test("Verify if it is possible to remove a product from the cart.", async ({
     .getByRole("heading", { name: "Ploom X Advanced Rose Shimmer" })
     .click();
 
-  await elementsPage.buttonAddProduct.click();
-  await elementsPage.cartQuantity.click();
-  await await expect(elementsPage.cartQuantity).toHaveValue("1");
-  await elementsPage.miniCartCheckoutButton.click();
-
-  await page
-    .getByTestId("regular-cart-list")
-    .getByTestId("quantityMinus")
-    .click();
-  //1 assertion
-  await expect(page.getByText("You have no items in your")).toBeVisible();
-
-  // 2nd assertion
-  await expect(
-    page.locator(
-      '[data-testid="cartTotal"] span.FormattedPrice-module-price-Kwago'
-    )
-  ).toHaveText("£0.00");
-
-  // check if disabled
-
-  await expect(
-    page
-      .locator("div")
-      .filter({ hasText: /^Checkout$/ })
-      .nth(1)
-  ).toBeDisabled();
-
-  await elementsPage.miniCart.click();
-  //assertion:
-
-  await expect(
-    page.getByTestId("mini-cart-header").getByTestId("emptyCartContainer")
-  ).toBeVisible();
-
-  //assertion:
-  await expect(page.getByText("Your Cart0 ItemsThere are no")).toBeVisible();
-  await page.getByTestId("miniCartCloseIcon").locator("path").click();
+    if (await elementsPage.buttonAddProduct.isVisible()) {
+      await elementsPage.buttonAddProduct.click();
+      await elementsPage.cartQuantity.click();
+      await expect(elementsPage.cartQuantity).toHaveValue("1");
+      await elementsPage.miniCartCheckoutButton.click();
+    
+      if (await page.getByTestId("regular-cart-list").getByTestId("quantityMinus").isVisible()) {
+        await page.getByTestId("regular-cart-list").getByTestId("quantityMinus").click();
+      } else {
+        throw new Error("The quantity minus button is not available, test aborted.");
+      }
+    
+      // 1st assertion
+      await expect(page.getByText("You have no items in your")).toBeVisible();
+    
+      // 2nd assertion
+      await expect(
+        page.locator(
+          '[data-testid="cartTotal"] span.FormattedPrice-module-price-Kwago'
+        )
+      ).toHaveText("£0.00");
+    
+      // Check if checkout button is disabled
+      await expect(
+        page
+          .locator("div")
+          .filter({ hasText: /^Checkout$/ })
+          .nth(1)
+      ).toBeDisabled();
+    
+      await elementsPage.miniCart.click();
+    
+      // Assertion: Mini cart should be empty
+      await expect(
+        page.getByTestId("mini-cart-header").getByTestId("emptyCartContainer")
+      ).toBeVisible();
+    
+      // Assertion: No items in cart message
+      await expect(page.getByText("Your Cart0 ItemsThere are no")).toBeVisible();
+    
+      if (await page.getByTestId("miniCartCloseIcon").locator("path").isVisible()) {
+        await page.getByTestId("miniCartCloseIcon").locator("path").click();
+      } else {
+        throw new Error("The mini cart close icon is not available, test aborted.");
+      }
+    
+    } else {
+      throw new Error("The product is not available, test aborted.");
+    }
+    
 });
 
 test("Verify if there are any broken links or images on the product page.", async ({
