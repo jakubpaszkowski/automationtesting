@@ -14,9 +14,18 @@ export class SimpleElements {
   loginInput: Locator;
   passwordInput: Locator;
   loginButton: Locator;
-  ageConfirmation: Locator; shopDropMenu: Locator; ploomXAdvanced: Locator; ploomXAdvancedProduct: Locator; buttonAddToCart: Locator;
-  cartQuantityValueDataTestId: Locator; productDescription: Locator; loginCheckoutButton: Locator; cartQuantityMinus: Locator;
+  ageConfirmation: Locator;
+  shopDropMenu: Locator;
+  ploomXAdvanced: Locator;
+  ploomXAdvancedProduct: Locator;
+  buttonAddToCart: Locator;
+  cartQuantityValueDataTestId: Locator;
+  productDescription: Locator;
+  loginCheckoutButton: Locator;
+  cartQuantityMinus: Locator;
   youHaveNoItems: Locator;
+  miniBasket: Locator;
+  emptyCartContainer: Locator;
 
   constructor(private page: Page) {
     this.buttonCookiesAccept = this.page.getByRole("button", {
@@ -30,7 +39,6 @@ export class SimpleElements {
       .locator('li:has-text("Shop")')
       .getByTestId("CloseShopMenu");
 
-      
     this.buttonProductPloomXAdvanced = this.page.locator(
       '[data-sku="ploom-x-advanced"]'
     );
@@ -47,18 +55,28 @@ export class SimpleElements {
     this.shopDropMenu = this.page.locator(".navigation__link").first();
 
     this.ploomXAdvanced = this.page.locator('[data-sku="ploom-x-advanced"]');
-    this.ploomXAdvancedProduct = this.page.getByRole("heading", { name: "Ploom X Advanced Rose Shimmer" });
+    this.ploomXAdvancedProduct = this.page.getByRole("heading", {
+      name: "Ploom X Advanced Rose Shimmer",
+    });
     this.buttonAddToCart = this.page.getByTestId("pdpAddToProduct");
-    this.cartQuantityValueDataTestId = this.page.locator('[data-testid="cartQuantity"]');
-    this.productDescription = this.page.locator(".ProductDescription-module-description-y4geg");
-    this.loginCheckoutButton = this.page.locator('button[data-testid="loginCheckoutButton"]');
-    this.cartQuantityMinus = this.page.getByTestId("regular-cart-list").getByTestId("quantityMinus");
+    this.cartQuantityValueDataTestId = this.page.locator(
+      '[data-testid="cartQuantity"]'
+    );
+    this.productDescription = this.page.locator(
+      ".ProductDescription-module-description-y4geg"
+    );
+    this.loginCheckoutButton = this.page.locator(
+      'button[data-testid="loginCheckoutButton"]'
+    );
+    this.cartQuantityMinus = this.page
+      .getByTestId("regular-cart-list")
+      .getByTestId("quantityMinus");
     this.youHaveNoItems = this.page.getByText("You have no items in your");
+    this.miniBasket = this.page.getByTestId("cartIcon").locator("path");
+    this.emptyCartContainer = this.page
+      .getByTestId("mini-cart-header")
+      .getByTestId("emptyCartContainer");
   }
-
-
-
-
 
   async login(userID: string, userPassword: string): Promise<void> {
     await this.loginInput.fill(userID);
