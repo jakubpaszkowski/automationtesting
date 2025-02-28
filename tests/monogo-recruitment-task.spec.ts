@@ -4,7 +4,7 @@ import {
   closeShopMenuIfVisible,
   linkToCartNCheckout,
   linkToProductPloomXAdvanced,
-  quantityMinus,
+  quantityMinus, verifyAllLinksOnPage
 } from "../test-data/monogo-helpers.ts";
 
 test("Verify if it is possible to add a product to the cart.", async ({
@@ -235,6 +235,11 @@ test("Verify if there are any broken links or images on the product page.", asyn
   //   .getByRole("heading", { name: /^Ploom X Advanced Rose Shimmer.*/i })
   //   .click();
 
+  // to co nizej:
+  // dziala :)
+  await verifyAllLinksOnPage(page, "https://www.ploom.co.uk");
+
+  /*
   // gather all links from webstie
   const links = await page.locator("a");
 
@@ -282,7 +287,9 @@ test("Verify if there are any broken links or images on the product page.", asyn
       }
     }
   }
+  */
 
+  
   //check if is clickable and accesible
   await expect(
     page.getByRole("link", { name: "0800 876 6594 Monday to" })

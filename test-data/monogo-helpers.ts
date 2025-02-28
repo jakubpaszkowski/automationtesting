@@ -38,6 +38,58 @@ if (
   }
 }
 
+
+import { expect } from "@playwright/test";
+
+export async function verifyAllLinksOnPage(page: Page, baseUrl: string): Promise<void> {
+  // Gather all links
+  const links = page.locator("a");
+  const linkCount = await links.count();
+
+  for (let i = 0; i < linkCount; i++) {
+    const link = links.nth(i);
+
+    // Does it have an 'href' attribute?
+    const href = await link.getAttribute("href");
+    expect(href).toBeTruthy(); // Ensure href is not null
+
+    let fullHref = href;
+    if (fullHref && !fullHref.startsWith("http")) {
+      fullHref = baseUrl + fullHref; // Add base URL if the link is relative
+    }
+
+    try {
+      const url = new URL(fullHref); // Validate if URL is correct
+      if (url.protocol === "http:" || url.protocol === "https:") {
+        // Make an HTTP request to the link
+        const response = await page.context().request.get(url.toString());
+        const status = response.status();
+
+        // Log HTTP status
+        if (status === 200) {
+          console.log(`✅ Link: ${fullHref} - OK (200)`);
+        } else if (status === 404) {
+          console.log(`❌ Link: ${fullHref} - Not Found (404)`);
+        } else if (status === 500) {
+          console.log(`⚠️ Link: ${fullHref} - Server Error (500)`);
+        } else {
+          console.log(`🔍 Link: ${fullHref} - Unexpected Status: ${status}`);
+        }
+
+        // Assert the link should return 200
+        expect(status).toBe(200);
+      } else {
+        console.log(`⚠️ Link: ${fullHref} has incorrect protocol: ${url.protocol}`);
+      }
+    } catch (error) {
+      console.log(`❌ Link: ${fullHref} has an invalid URL`);
+    }
+  }
+}
+
+
+
+/*
 import { expect } from "@playwright/test";
 
 export async function verifyImageSrcVisibilityStatus(page: Page): Promise<void> {
@@ -72,7 +124,7 @@ export async function verifyImageSrcVisibilityStatus(page: Page): Promise<void> 
   }
 }
 
-
+*/
 
 // helpers.ts
 // import { expect, Locator } from '@playwright/test';

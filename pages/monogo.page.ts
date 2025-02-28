@@ -27,6 +27,7 @@ export class SimpleElements {
   miniBasket: Locator;
   emptyCartContainer: Locator;
   miniBasket1: Locator;
+  item0800: Locator;
 
   constructor(private page: Page) {
     this.buttonCookiesAccept = this.page.getByRole("button", {
@@ -79,6 +80,9 @@ export class SimpleElements {
     this.emptyCartContainer = this.page
       .getByTestId("mini-cart-header")
       .getByTestId("emptyCartContainer");
+
+     this.item0800 = this.page.getByRole("link", { name: "0800 876 6594 Monday to" });
+
   }
 
   async login(userID: string, userPassword: string): Promise<void> {
