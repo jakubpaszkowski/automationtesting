@@ -32,7 +32,7 @@ test("Verify if it is possible to add a product to the cart.", async ({
   await elementsPage.loginCheckoutButton.click();
 });
 
-test("Verify if it is possible to remove a product from the cart..", async ({
+test("dont use - Verify if it is possible to remove a product from the cart..", async ({
   page,
 }) => {
   const elementsPage = new SimpleElements(page);
@@ -54,13 +54,11 @@ test("Verify if it is possible to remove a product from the cart..", async ({
   );
   await expect(page.url()).toBe(linkToCartNCheckout);
   await expect(elementsPage.loginCheckoutButton).toBeVisible();
-
-
-
 });
 
-
-test("Verify if it is possible to remove a product from the cart", async ({ page }) => {
+test("Verify if it is possible to remove a product from the cart", async ({
+  page,
+}) => {
   const elementsPage = new SimpleElements(page);
   await page.goto("https://www.ploom.co.uk/en");
   await elementsPage.buttonCookiesAccept.click();
@@ -74,86 +72,31 @@ test("Verify if it is possible to remove a product from the cart", async ({ page
   await elementsPage.buttonAddToCart.click();
   await elementsPage.cartQuantity.click();
   await expect(elementsPage.cartQuantity).toHaveValue("1");
+  await elementsPage.cartQuantity.press("Enter");
   await elementsPage.miniCartCheckoutButton.click();
 
+  // await page.goto("https://www.ploom.co.uk/en/cart-n-checkout#/", { waitUntil: "domcontentloaded" });
+  await page.goto("https://www.ploom.co.uk/en/cart-n-checkout#/");
+  await quantityMinus(page);
+  // 1st assertion
+  await expect(elementsPage.youHaveNoItems).toBeVisible();
+  // sprobujemy innej metody innego lokatora
+  // await elementsPage.miniBasket1.click();
+  await elementsPage.miniBasket.click();
 
-    // if (
-    //   await page
-    //     .getByTestId("regular-cart-list")
-    //     .getByTestId("quantityMinus")
-    //     .isVisible()
-    // ) {
-    //   await page
-    //     .getByTestId("regular-cart-list")
-    //     .getByTestId("quantityMinus")
-    //     .click();
-    // } else {
-    //   throw new Error(
-    //     "The quantity minus button is not available, test aborted."
-    //   );
-    // }
-    await page.goto("https://www.ploom.co.uk/en/cart-n-checkout#/", { waitUntil: "domcontentloaded" });
-    await quantityMinus(page);
-    // 1st assertion
-    await expect(elementsPage.youHaveNoItems).toBeVisible();
-    await elementsPage.miniBasket.click();
-    // await page.goto('https://www.ploom.co.uk/en/cart-n-checkout#/');
+  // await page.goto('https://www.ploom.co.uk/en/cart-n-checkout#/');
 
-    // await page.getByTestId('regular-cart-list').getByTestId('quantityMinus').click();
-    // await page.getByTestId('cartIcon').locator('path').click();
-    // await page.getByTestId('cartIcon').locator('path').click();
-    await elementsPage.emptyCartContainer.click();
-    await expect(elementsPage.emptyCartContainer).toHaveText("There are no products in your cart at the moment.");
-    // await page.getByTestId('mini-cart-header').getByTestId('emptyCartContainer').click();
-    // await page.getByTestId('mini-cart-header').getByTestId('emptyCartContainer').click();
-    // jesli zostawie to co wyzej i usune to co nizej to dziala ;d
-
-
-    // await expect(page.getByText("You have no items in your")).toBeVisible();
-
-    // 2nd assertion
-    // await expect(
-    //   page.locator(
-    //     '[data-testid="cartTotal"] span.FormattedPrice-module-price-Kwago'
-    //   )
-    // ).toHaveText("£0.00");
-
-    // // Check if checkout button is disabled
-    // await expect(
-    //   page
-    //     .locator("div")
-    //     .filter({ hasText: /^Checkout$/ })
-    //     .nth(1)
-    // ).toBeDisabled();
-
-    // await elementsPage.miniCart.click();
-
-    // // Assertion: Mini cart should be empty
-    // await expect(
-    //   page.getByTestId("mini-cart-header").getByTestId("emptyCartContainer")
-    // ).toBeVisible();
-
-    // // Assertion: No items in cart message
-    // await expect(page.getByText("Your Cart0 ItemsThere are no")).toBeVisible();
-
-    // if (
-    //   await page.getByTestId("miniCartCloseIcon").locator("path").isVisible()
-    // ) {
-    //   await page.getByTestId("miniCartCloseIcon").locator("path").click();
-    // } else {
-    //   throw new Error(
-    //     "The mini cart close icon is not available, test aborted."
-    //   );
-    // }
- 
-  
+  // await page.getByTestId('regular-cart-list').getByTestId('quantityMinus').click();
+  // await page.getByTestId('cartIcon').locator('path').click();
+  // await page.getByTestId('cartIcon').locator('path').click();
+  await elementsPage.emptyCartContainer.click();
+  await expect(elementsPage.emptyCartContainer).toHaveText(
+    "There are no products in your cart at the moment."
+  );
 });
 
-
-
-test("Verify if it is possible to remove a product from the cart.", async ({
+test(" dont use - Verify if it is possible to remove a product from the cart.", async ({
   page,
-  
 }) => {
   const elementsPage = new SimpleElements(page);
   //  await page.goto("https://www.ploom.co.uk/en");
@@ -177,27 +120,25 @@ test("Verify if it is possible to remove a product from the cart.", async ({
   //  await page
   //    .getByRole("heading", { name: "Ploom X Advanced Rose Shimmer" })
   //    .click();
-    if (await elementsPage.buttonAddProduct.isVisible()) {
-      await elementsPage.buttonAddProduct.click();
-     await elementsPage.cartQuantity.click();
-      await expect(elementsPage.cartQuantity).toHaveValue("1");
-      await elementsPage.miniCartCheckoutButton.click();
+  if (await elementsPage.buttonAddProduct.isVisible()) {
+    await elementsPage.buttonAddProduct.click();
+    await elementsPage.cartQuantity.click();
+    await expect(elementsPage.cartQuantity).toHaveValue("1");
+    await elementsPage.miniCartCheckoutButton.click();
 
-  
-  await page.goto("https://www.ploom.co.uk/en");
-  await elementsPage.buttonCookiesAccept.click();
-  await elementsPage.ageConfirmation.click();
-  await elementsPage.shopDropMenu.click();
-  await closeShopMenuIfVisible(page);
-  await elementsPage.ploomXAdvanced.click({ force: true });
-  await page.waitForURL(linkToProductPloomXAdvanced);
-  await expect(elementsPage.ploomXAdvancedProduct).toBeVisible();
-  await elementsPage.ploomXAdvancedProduct.click();
-  await elementsPage.buttonAddToCart.click();
-  await elementsPage.cartQuantity.click();
-  await expect(elementsPage.cartQuantity).toHaveValue("1");
-  await elementsPage.miniCartCheckoutButton.click();
-
+    await page.goto("https://www.ploom.co.uk/en");
+    await elementsPage.buttonCookiesAccept.click();
+    await elementsPage.ageConfirmation.click();
+    await elementsPage.shopDropMenu.click();
+    await closeShopMenuIfVisible(page);
+    await elementsPage.ploomXAdvanced.click({ force: true });
+    await page.waitForURL(linkToProductPloomXAdvanced);
+    await expect(elementsPage.ploomXAdvancedProduct).toBeVisible();
+    await elementsPage.ploomXAdvancedProduct.click();
+    await elementsPage.buttonAddToCart.click();
+    await elementsPage.cartQuantity.click();
+    await expect(elementsPage.cartQuantity).toHaveValue("1");
+    await elementsPage.miniCartCheckoutButton.click();
 
     // if (
     //   await page
@@ -268,24 +209,31 @@ test("Verify if there are any broken links or images on the product page.", asyn
   await elementsPage.buttonCookiesAccept.click();
   await elementsPage.buttonAgeConfirmation.first().click();
   await elementsPage.buttonNavigationLink.first().click();
-  if (
-    await page
-      .locator('li:has-text("Shop")')
-      .locator('[data-testid="CloseShopMenu"]')
-      .isVisible()
-  ) {
-    await page
-      .locator('li:has-text("Shop")')
-      .locator('[data-testid="CloseShopMenu"]')
-      .click();
-  } else {
-    console.log("'CloseShopMenu' element has not been found. Test goes on.");
-  }
+  await closeShopMenuIfVisible(page);
 
-  await elementsPage.buttonProductPloomXAdvanced.click();
-  await page
-    .getByRole("heading", { name: /^Ploom X Advanced Rose Shimmer.*/i })
-    .click();
+  // if (
+  //   await page
+  //     .locator('li:has-text("Shop")')
+  //     .locator('[data-testid="CloseShopMenu"]')
+  //     .isVisible()
+  // ) {
+  //   await page
+  //     .locator('li:has-text("Shop")')
+  //     .locator('[data-testid="CloseShopMenu"]')
+  //     .click();
+  // } else {
+  //   console.log("'CloseShopMenu' element has not been found. Test goes on.");
+  // }
+
+  await elementsPage.ploomXAdvanced.click({ force: true });
+  await page.waitForURL(linkToProductPloomXAdvanced);
+  await expect(elementsPage.ploomXAdvancedProduct).toBeVisible();
+  await elementsPage.ploomXAdvancedProduct.click();
+
+  // await elementsPage.buttonProductPloomXAdvanced.click();
+  // await page
+  //   .getByRole("heading", { name: /^Ploom X Advanced Rose Shimmer.*/i })
+  //   .click();
 
   // gather all links from webstie
   const links = await page.locator("a");

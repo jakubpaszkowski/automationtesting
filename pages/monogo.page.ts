@@ -26,6 +26,7 @@ export class SimpleElements {
   youHaveNoItems: Locator;
   miniBasket: Locator;
   emptyCartContainer: Locator;
+  miniBasket1: Locator;
 
   constructor(private page: Page) {
     this.buttonCookiesAccept = this.page.getByRole("button", {
@@ -72,7 +73,9 @@ export class SimpleElements {
       .getByTestId("regular-cart-list")
       .getByTestId("quantityMinus");
     this.youHaveNoItems = this.page.getByText("You have no items in your");
-    this.miniBasket = this.page.getByTestId("cartIcon").locator("path");
+    this.miniBasket = this.page.getByTestId("miniCart");
+
+    this.miniBasket1 = this.page.getByTestId("cartIcon").locator("path");
     this.emptyCartContainer = this.page
       .getByTestId("mini-cart-header")
       .getByTestId("emptyCartContainer");
