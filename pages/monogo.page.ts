@@ -28,6 +28,23 @@ export class SimpleElements {
   emptyCartContainer: Locator;
   miniBasket1: Locator;
   item0800: Locator;
+  forMoreInformation: Locator;
+  privacyPolicy: Locator;
+  termsOfService: Locator;
+  support: Locator;
+  itemsList0: Locator;
+  itemsList1: Locator;
+  itemsList2: Locator;
+  deliveryReturns: Locator;
+  itemsList0Delivery: Locator;
+  itemsList1Returns: Locator; 
+  itemsList2Ploom: Locator;
+  company: Locator;
+  itemsList0Terms: Locator;
+  itemsList1Terms: Locator;
+  itemsList2Environment: Locator;
+
+
 
   constructor(private page: Page) {
     this.buttonCookiesAccept = this.page.getByRole("button", {
@@ -82,6 +99,30 @@ export class SimpleElements {
       .getByTestId("emptyCartContainer");
 
      this.item0800 = this.page.getByRole("link", { name: "0800 876 6594 Monday to" });
+    this.forMoreInformation = this.page
+    .locator("p")
+    .filter({ hasText: "for more information on how" })
+    .getByRole("link");
+
+    this.privacyPolicy = this.page
+    .getByTestId("recaptchabar")
+    .getByRole("link", { name: "Privacy Policy" });
+
+    this.termsOfService = this.page.getByRole("link", { name: "Terms of Service" });
+    this.support = this.page.getByText("Support");
+    this.itemsList0 = this.page.getByTestId("ItemList-0-Contact Us").getByTestId("shopLink-0");
+    this.itemsList1 = this.page.getByTestId("ItemList-1-FAQ's").getByTestId("shopLink-1");
+    this.itemsList2 = this.page.getByTestId("ItemList-2-Product Help").getByTestId("shopLink-2");
+    this.deliveryReturns = this.page.getByText("Delivery & Returns");
+    this.itemsList0Delivery = this.page.getByTestId("ItemList-0-Delivery").getByTestId("shopLink-0");
+    this.itemsList1Returns = this.page.getByTestId("ItemList-1-Returns").getByTestId("shopLink-1");
+    this.itemsList2Ploom = this.page.getByTestId("ItemList-2-Ploom Promise").getByTestId("shopLink-2");
+    this.company = this.page.getByText("Company");
+    this.itemsList0Terms = this.page.getByTestId("ItemList-0-Terms of Use").getByTestId("shopLink-0");
+    this.itemsList1Terms = this.page.getByTestId("ItemList-1-Terms of Sale").getByTestId("shopLink-1");
+    this.itemsList2Environment = this.page.getByTestId("ItemList-2-Environment").getByTestId("shopLink-2");
+
+
 
   }
 

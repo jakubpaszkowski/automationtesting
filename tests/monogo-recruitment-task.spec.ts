@@ -4,7 +4,8 @@ import {
   closeShopMenuIfVisible,
   linkToCartNCheckout,
   linkToProductPloomXAdvanced,
-  quantityMinus, verifyAllLinksOnPage
+  quantityMinus,
+  verifyAllLinksOnPage,
 } from "../test-data/monogo-helpers.ts";
 
 test("Verify if it is possible to add a product to the cart.", async ({
@@ -289,13 +290,17 @@ test("Verify if there are any broken links or images on the product page.", asyn
   }
   */
 
-  
   //check if is clickable and accesible
+  await expect(elementsPage.item0800).toBeEnabled();
+  /*
   await expect(
     page.getByRole("link", { name: "0800 876 6594 Monday to" })
   ).toBeEnabled();
   // can we click on items?
+*/
 
+  await expect.soft(elementsPage.forMoreInformation).toBeEnabled();
+  /* 
   await expect
     .soft(
       page
@@ -304,50 +309,108 @@ test("Verify if there are any broken links or images on the product page.", asyn
         .getByRole("link")
     )
     .toBeEnabled();
-  await expect
+  */
+
+  await expect.soft(elementsPage.privacyPolicy).toBeEnabled();
+  /*
+    await expect
     .soft(
       page
         .getByTestId("recaptchabar")
         .getByRole("link", { name: "Privacy Policy" })
     )
     .toBeEnabled();
-  await expect
+    */
+
+  await expect.soft(elementsPage.termsOfService).toBeEnabled();
+  /*
+    await expect
     .soft(page.getByRole("link", { name: "Terms of Service" }))
     .toBeEnabled();
+    */
+
+  await expect.soft(elementsPage.support).toBeEnabled();
+  /*
   await expect.soft(page.getByText("Support")).toBeEnabled();
+*/
+
+  await expect.soft(elementsPage.itemsList0).toBeEnabled();
+  /*
+  
   await expect
     .soft(page.getByTestId("ItemList-0-Contact Us").getByTestId("shopLink-0"))
     .toBeEnabled();
+  */
+
+  await expect.soft(elementsPage.itemsList1).toBeEnabled();
+  /*
   await expect
     .soft(page.getByTestId("ItemList-1-FAQ's").getByTestId("shopLink-1"))
     .toBeEnabled();
+  */
+
+  await expect.soft(elementsPage.itemsList2).toBeEnabled();
+  /* 
   await expect
     .soft(page.getByTestId("ItemList-2-Product Help").getByTestId("shopLink-2"))
     .toBeEnabled();
+  */
+
+  await expect.soft(elementsPage.deliveryReturns).toBeEnabled();
+  /*
   await expect.soft(page.getByText("Delivery & Returns")).toBeEnabled();
+  */
+
+  await expect.soft(elementsPage.itemsList0Delivery).toBeEnabled();
+  /*
   await expect
     .soft(page.getByTestId("ItemList-0-Delivery").getByTestId("shopLink-0"))
     .toBeEnabled();
+  */
+
+  await expect.soft(elementsPage.itemsList1Returns).toBeEnabled();
+  /*
   await expect
     .soft(page.getByTestId("ItemList-1-Returns").getByTestId("shopLink-1"))
     .toBeEnabled();
+  */
+
+  await expect.soft(elementsPage.itemsList2Ploom).toBeEnabled();
+  /*
   await expect
     .soft(
       page.getByTestId("ItemList-2-Ploom Promise").getByTestId("shopLink-2")
     )
     .toBeEnabled();
+*/
+
+  await expect.soft(elementsPage.company).toBeEnabled();
+  /*
   await expect.soft(page.getByText("Company")).toBeEnabled();
+  */
+
+  await expect.soft(elementsPage.itemsList0Terms).toBeEnabled();
+  /*
   await expect
     .soft(page.getByTestId("ItemList-0-Terms of Use").getByTestId("shopLink-0"))
     .toBeEnabled();
+  */
+
+  await expect.soft(elementsPage.itemsList1Terms).toBeEnabled();
+  /*
   await expect
     .soft(
       page.getByTestId("ItemList-1-Terms of Sale").getByTestId("shopLink-1")
     )
     .toBeEnabled();
+  */
+
+  await expect.soft(elementsPage.itemsList2Environment).toBeEnabled();
+  /*
   await expect
     .soft(page.getByTestId("ItemList-2-Environment").getByTestId("shopLink-2"))
     .toBeEnabled();
+  */
 
   // gather all images
   const images = await page.locator("img");
