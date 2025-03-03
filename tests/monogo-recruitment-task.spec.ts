@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import { SimpleElements } from "../pages/monogo.page";
 import {
   closeShopMenuIfVisible,
+  gatherImagesCheckHowMany,
   linkToCartNCheckout,
   linkToProductPloomXAdvanced,
   quantityMinus,
@@ -203,7 +204,6 @@ test(" dont use - Verify if it is possible to remove a product from the cart.", 
 test("Verify if there are any broken links or images on the product page.", async ({
   page,
 }) => {
-  // Arrange:
   const elementsPage = new SimpleElements(page);
   await page.goto("https://www.ploom.co.uk/en");
 
@@ -211,234 +211,27 @@ test("Verify if there are any broken links or images on the product page.", asyn
   await elementsPage.buttonAgeConfirmation.first().click();
   await elementsPage.buttonNavigationLink.first().click();
   await closeShopMenuIfVisible(page);
-
-  // if (
-  //   await page
-  //     .locator('li:has-text("Shop")')
-  //     .locator('[data-testid="CloseShopMenu"]')
-  //     .isVisible()
-  // ) {
-  //   await page
-  //     .locator('li:has-text("Shop")')
-  //     .locator('[data-testid="CloseShopMenu"]')
-  //     .click();
-  // } else {
-  //   console.log("'CloseShopMenu' element has not been found. Test goes on.");
-  // }
-
   await elementsPage.ploomXAdvanced.click({ force: true });
   await page.waitForURL(linkToProductPloomXAdvanced);
   await expect(elementsPage.ploomXAdvancedProduct).toBeVisible();
   await elementsPage.ploomXAdvancedProduct.click();
-
-  // await elementsPage.buttonProductPloomXAdvanced.click();
-  // await page
-  //   .getByRole("heading", { name: /^Ploom X Advanced Rose Shimmer.*/i })
-  //   .click();
-
-  // to co nizej:
-  // dziala :)
   await verifyAllLinksOnPage(page, "https://www.ploom.co.uk");
-
-  /*
-  // gather all links from webstie
-  const links = await page.locator("a");
-
-  // check all links on website
-  const linkCount = await links.count();
-
-  for (let i = 0; i < linkCount; i++) {
-    const link = links.nth(i);
-
-    // does it have(has?) 'href' atribute? im tired cause dont know have/has after dose should be used lol
-    const href = await link.getAttribute("href");
-    expect(href).toBeTruthy(); // is href null?
-
-    // If the is relative, add the full domain
-    let fullHref = href;
-    if (fullHref && !fullHref.startsWith("http")) {
-      fullHref = "https://www.ploom.co.uk" + fullHref; //all stuff is from this site
-
-      // We check that the URL is absolute and correct
-      try {
-        const url = new URL(fullHref); // validate if url is correct
-        if (url.protocol === "http:" || url.protocol === "https:") {
-          // Use request to check the HTTP status of a link
-          const response = await page.context().request.get(url.toString()); // Make an HTTP request to the link
-          const status = response.status(); //get https status
-
-          // what http status we get?
-          if (status === 200) {
-            console.log(`Link: ${fullHref} - OK (200)`);
-          } else if (status === 404) {
-            console.log(`Link: ${fullHref} - Not Found (404)`);
-          } else if (status === 500) {
-            console.log(`Link: ${fullHref} - Server Error (500)`);
-          } else {
-            console.log(`Link: ${fullHref} - Unexpected Status: ${status}`);
-          }
-
-          // should be 200 http status
-          expect(status).toBe(200);
-        } else {
-          console.log(`Link: ${fullHref} incorrect protocol: ${url.protocol}`);
-        }
-      } catch (error) {
-        console.log(`Link: ${fullHref} inncorect url`);
-      }
-    }
-  }
-  */
-
-  //check if is clickable and accesible
   await expect(elementsPage.item0800).toBeEnabled();
-  /*
-  await expect(
-    page.getByRole("link", { name: "0800 876 6594 Monday to" })
-  ).toBeEnabled();
-  // can we click on items?
-*/
-
   await expect.soft(elementsPage.forMoreInformation).toBeEnabled();
-  /* 
-  await expect
-    .soft(
-      page
-        .locator("p")
-        .filter({ hasText: "for more information on how" })
-        .getByRole("link")
-    )
-    .toBeEnabled();
-  */
-
   await expect.soft(elementsPage.privacyPolicy).toBeEnabled();
-  /*
-    await expect
-    .soft(
-      page
-        .getByTestId("recaptchabar")
-        .getByRole("link", { name: "Privacy Policy" })
-    )
-    .toBeEnabled();
-    */
-
   await expect.soft(elementsPage.termsOfService).toBeEnabled();
-  /*
-    await expect
-    .soft(page.getByRole("link", { name: "Terms of Service" }))
-    .toBeEnabled();
-    */
-
   await expect.soft(elementsPage.support).toBeEnabled();
-  /*
-  await expect.soft(page.getByText("Support")).toBeEnabled();
-*/
-
   await expect.soft(elementsPage.itemsList0).toBeEnabled();
-  /*
-  
-  await expect
-    .soft(page.getByTestId("ItemList-0-Contact Us").getByTestId("shopLink-0"))
-    .toBeEnabled();
-  */
-
   await expect.soft(elementsPage.itemsList1).toBeEnabled();
-  /*
-  await expect
-    .soft(page.getByTestId("ItemList-1-FAQ's").getByTestId("shopLink-1"))
-    .toBeEnabled();
-  */
-
   await expect.soft(elementsPage.itemsList2).toBeEnabled();
-  /* 
-  await expect
-    .soft(page.getByTestId("ItemList-2-Product Help").getByTestId("shopLink-2"))
-    .toBeEnabled();
-  */
-
   await expect.soft(elementsPage.deliveryReturns).toBeEnabled();
-  /*
-  await expect.soft(page.getByText("Delivery & Returns")).toBeEnabled();
-  */
-
   await expect.soft(elementsPage.itemsList0Delivery).toBeEnabled();
-  /*
-  await expect
-    .soft(page.getByTestId("ItemList-0-Delivery").getByTestId("shopLink-0"))
-    .toBeEnabled();
-  */
-
   await expect.soft(elementsPage.itemsList1Returns).toBeEnabled();
-  /*
-  await expect
-    .soft(page.getByTestId("ItemList-1-Returns").getByTestId("shopLink-1"))
-    .toBeEnabled();
-  */
-
   await expect.soft(elementsPage.itemsList2Ploom).toBeEnabled();
-  /*
-  await expect
-    .soft(
-      page.getByTestId("ItemList-2-Ploom Promise").getByTestId("shopLink-2")
-    )
-    .toBeEnabled();
-*/
-
   await expect.soft(elementsPage.company).toBeEnabled();
-  /*
-  await expect.soft(page.getByText("Company")).toBeEnabled();
-  */
-
   await expect.soft(elementsPage.itemsList0Terms).toBeEnabled();
-  /*
-  await expect
-    .soft(page.getByTestId("ItemList-0-Terms of Use").getByTestId("shopLink-0"))
-    .toBeEnabled();
-  */
-
   await expect.soft(elementsPage.itemsList1Terms).toBeEnabled();
-  /*
-  await expect
-    .soft(
-      page.getByTestId("ItemList-1-Terms of Sale").getByTestId("shopLink-1")
-    )
-    .toBeEnabled();
-  */
-
   await expect.soft(elementsPage.itemsList2Environment).toBeEnabled();
-  /*
-  await expect
-    .soft(page.getByTestId("ItemList-2-Environment").getByTestId("shopLink-2"))
-    .toBeEnabled();
-  */
+  await gatherImagesCheckHowMany(page, "https://m24-ploom-uk.jtides.com");
 
-  // gather all images
-  const images = await page.locator("img");
-
-  // check how many images
-  const imageCount = await images.count();
-
-  for (let i = 0; i < imageCount; i++) {
-    const image = images.nth(i);
-
-    // does img has src atribute?
-    const src = await image.getAttribute("src");
-    expect(src).toBeTruthy(); // is src null?
-
-    // is shown on page?
-    const isVisible = await image.isVisible();
-    expect(isVisible).toBe(true); // has to be visible otherwise bug :d
-
-    // If the URL is relative, we add the full domain
-    let fullSrc = src;
-    if (fullSrc && !fullSrc.startsWith("http")) {
-      fullSrc = "https://m24-ploom-uk.jtides.com" + fullSrc;
-    }
-
-    // to chceck http status i use fetch()
-    if (fullSrc) {
-      const response = await page.request.get(fullSrc); // calling http about img
-      expect(response.status()).toBe(200); // should be 200 status
-    }
-  }
 });

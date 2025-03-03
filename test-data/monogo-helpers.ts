@@ -87,7 +87,38 @@ export async function verifyAllLinksOnPage(page: Page, baseUrl: string): Promise
   }
 }
 
+export async function gatherImagesCheckHowMany(page: Page, baseUrl: string): Promise<void> 
+{
+  // gather all images
+  const images = await page.locator("img");
 
+  // check how many images
+  const imageCount = await images.count();
+
+  for (let i = 0; i < imageCount; i++) {
+    const image = images.nth(i);
+
+    // does img has src atribute?
+    const src = await image.getAttribute("src");
+    expect(src).toBeTruthy(); // is src null?
+
+    // is shown on page?
+    const isVisible = await image.isVisible();
+    expect(isVisible).toBe(true); // has to be visible otherwise bug :d
+
+    // If the URL is relative, we add the full domain
+    let fullSrc = src;
+    if (fullSrc && !fullSrc.startsWith("http")) {
+      fullSrc = "https://m24-ploom-uk.jtides.com" + fullSrc;
+    }
+
+    // to chceck http status i use fetch()
+    if (fullSrc) {
+      const response = await page.request.get(fullSrc); // calling http about img
+      expect(response.status()).toBe(200); // should be 200 status
+    }
+  }
+}
 
 /*
 import { expect } from "@playwright/test";
