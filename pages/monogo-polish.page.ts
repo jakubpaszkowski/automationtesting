@@ -28,26 +28,30 @@ export class SimpleElements {
   miniBasket: Locator;
   emptyCartContainer: Locator;
   miniBasket1: Locator;
-  item0800: Locator;
+  item0800Polish: Locator;
   forMoreInformation: Locator;
   privacyPolicy: Locator;
+  privacyPolicyPolish: Locator;
   termsOfService: Locator;
   support: Locator;
+  supportPolish: Locator;
   itemsList0: Locator;
-  itemsList1: Locator;
-  itemsList2: Locator;
-  deliveryReturns: Locator;
-  itemsList0Delivery: Locator;
+  itemsContactUsPolish: Locator;
+  itemsFaqPolish: Locator;
+  itemsProductHelpPolish: Locator;
+  deliveryReturnsPolish: Locator;
+  itemsDeliveryPolish: Locator;
   itemsList1Returns: Locator; 
-  itemsList2Ploom: Locator;
-  company: Locator;
-  itemsList0Terms: Locator;
-  itemsList1Terms: Locator;
+  itemsWhyPloomPolish: Locator;
+  companyPolish: Locator;
+  itemsTermsOfUsePolish: Locator;
+  itemsTermsOfSalePolish: Locator;
   itemsList2Environment: Locator;
   headingPloomXAdvancedBlue: Locator; 
   shopButtonPolish: Locator;
   emptyContainerInfoTextPolish: Locator;
   emptyCartContainerPolish: Locator;
+  item800808000Polish: Locator;
 
   constructor(private page: Page) {
     this.buttonCookiesAcceptPolish = page.getByRole('button', { name: 'Akceptuj wszystkie pliki' });
@@ -110,28 +114,27 @@ export class SimpleElements {
       .getByTestId("mini-cart-header")
       .getByTestId("emptyCartContainer");
 
-     this.item0800 = this.page.getByRole("link", { name: "0800 876 6594 Monday to" });
+     this.item800808000Polish = this.page.getByRole('link', { name: '800 808 000 Od poniedziałku' });
+     
     this.forMoreInformation = this.page
     .locator("p")
     .filter({ hasText: "for more information on how" })
     .getByRole("link");
 
-    this.privacyPolicy = this.page
-    .getByTestId("recaptchabar")
-    .getByRole("link", { name: "Privacy Policy" });
+    this.privacyPolicyPolish = this.page.getByTestId('ItemList-1-Polityka prywatności');
 
     this.termsOfService = this.page.getByRole("link", { name: "Terms of Service" });
-    this.support = this.page.getByText("Support");
-    this.itemsList0 = this.page.getByTestId("ItemList-0-Contact Us").getByTestId("shopLink-0");
-    this.itemsList1 = this.page.getByTestId("ItemList-1-FAQ's").getByTestId("shopLink-1");
-    this.itemsList2 = this.page.getByTestId("ItemList-2-Product Help").getByTestId("shopLink-2");
-    this.deliveryReturns = this.page.getByText("Delivery & Returns");
-    this.itemsList0Delivery = this.page.getByTestId("ItemList-0-Delivery").getByTestId("shopLink-0");
-    this.itemsList1Returns = this.page.getByTestId("ItemList-1-Returns").getByTestId("shopLink-1");
-    this.itemsList2Ploom = this.page.getByTestId("ItemList-2-Ploom Promise").getByTestId("shopLink-2");
-    this.company = this.page.getByText("Company");
-    this.itemsList0Terms = this.page.getByTestId("ItemList-0-Terms of Use").getByTestId("shopLink-0");
-    this.itemsList1Terms = this.page.getByTestId("ItemList-1-Terms of Sale").getByTestId("shopLink-1");
+    this.supportPolish = this.page.getByTestId('footer').getByText('Wsparcie');
+    this.itemsContactUsPolish = this.page.getByTestId('ItemList-0-Kontakt');
+    this.itemsFaqPolish = this.page.getByTestId('ItemList-2-FAQ');
+    this.itemsProductHelpPolish = this.page.getByTestId('ItemList-3-Pomoc dotycząca produktów');
+    this.deliveryReturnsPolish = this.page.getByTestId('ItemList-5-Zwroty i reklamacje');
+    this.itemsDeliveryPolish = this.page.getByTestId('ItemList-6-Formy dostaw i płatności');
+    // this.itemsReturnsPolish = this.page.getByTestId('ItemList-5-Zwroty i reklamacje');
+    this.itemsWhyPloomPolish = this.page.getByTestId('ItemList-0-Dlaczego Ploom?');
+    this.companyPolish = this.page.getByText('Ploom', { exact: true });
+    this.itemsTermsOfUsePolish = this.page.getByTestId('ItemList-1-Instrukcje i deklaracje');
+    this.itemsTermsOfSalePolish = this.page.getByTestId('ItemList-2-Weryfikacja wieku');
     this.itemsList2Environment = this.page.getByTestId("ItemList-2-Environment").getByTestId("shopLink-2");
 
 

@@ -99,6 +99,7 @@ export class SimpleElements {
       .getByTestId("emptyCartContainer");
 
      this.item0800 = this.page.getByRole("link", { name: "0800 876 6594 Monday to" });
+     
     this.forMoreInformation = this.page
     .locator("p")
     .filter({ hasText: "for more information on how" })

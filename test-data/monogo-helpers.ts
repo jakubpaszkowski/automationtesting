@@ -117,8 +117,7 @@ export async function verifyAllLinksOnPage(page: Page, baseUrl: string): Promise
   }
 };
 
-export async function gatherImagesCheckHowMany(page: Page, baseUrl: string): Promise<void> 
-{
+export async function gatherImagesCheckHowMany(page: Page, baseUrl: string): Promise<void> {
   // gather all images
   const images = await page.locator("img");
 
@@ -128,7 +127,134 @@ export async function gatherImagesCheckHowMany(page: Page, baseUrl: string): Pro
   for (let i = 0; i < imageCount; i++) {
     const image = images.nth(i);
 
-    // does img has src atribute?
+    // does img have src attribute?
+    const src = await image.getAttribute("src");
+    expect(src).toBeTruthy(); // is src null?
+
+    // Check if the image is visible, but don't throw an error if it's not
+    const isVisible = await image.isVisible();
+    if (!isVisible) {
+      console.log(`⚠️ Obrazek ${src} nie jest widoczny. Zostanie pominięty.`);
+      continue; // Skip the current iteration if the image is not visible
+    }
+
+    // If the URL is relative, we add the full domain
+    let fullSrc = src;
+    if (fullSrc && !fullSrc.startsWith("http")) {
+      fullSrc = baseUrl + fullSrc; // Add the base URL if the link is relative
+    }
+
+    // Check HTTP status using fetch()
+    if (fullSrc) {
+      try {
+        const response = await page.request.get(fullSrc); // Request about img
+        expect(response.status()).toBe(200); // Should be 200 status
+      } catch (error) {
+        console.log(`❌ Błąd z żądaniem dla obrazu: ${fullSrc}`);
+      }
+    }
+  }
+};
+
+
+export async function findInvalidLinks(page: Page): Promise<void> {
+  const links = page.locator("a");
+  const linkCount = await links.count();
+
+  for (let i = 0; i < linkCount; i++) {
+    const link = links.nth(i);
+    const href = await link.getAttribute("href");
+
+    if (href && !href.startsWith("http")) {
+      console.log(`⚠️ Możliwy problematyczny link: ${href}`);
+    } else if (href?.includes("tel:")) {
+      console.log(`📞 Link zawiera numer telefonu: ${href}`);
+    }
+  }
+}
+
+
+
+
+export async function collectAllLocators(page: Page): Promise<void> {
+  // Pobierz wszystkie elementy na stronie
+  const elements = await page.locator("*").all();
+
+  for (const element of elements) {
+    const tagName = await element.evaluate(el => el.tagName.toLowerCase());
+    const id = await element.getAttribute("id");
+    const classes = await element.getAttribute("class");
+    const name = await element.getAttribute("name");
+    const dataAttributes = await element.evaluate(el =>
+      Array.from(el.attributes)
+        .filter(attr => attr.name.startsWith("data-"))
+        .map(attr => `${attr.name}="${attr.value}"`)
+    );
+
+    // Budowanie lokatorów
+    const locators: string[] = [];
+    if (id) locators.push(`#${id}`); // CSS ID
+    if (classes) locators.push(...classes.split(" ").map(cls => `.${cls}`)); // CSS Class
+    if (name) locators.push(`[name="${name}"]`); // Name attribute
+    if (dataAttributes.length) locators.push(...dataAttributes.map(attr => `[${attr}]`)); // Data attributes
+
+    // XPath dla każdego elementu
+    const xpath = await element.evaluate(el => {
+      function getXPath(el: Element): string {
+        if (!el.parentElement) return `/${el.tagName.toLowerCase()}`;
+        const siblings = Array.from(el.parentElement.children).filter(e => e.tagName === el.tagName);
+        const index = siblings.length > 1 ? `[${siblings.indexOf(el) + 1}]` : "";
+        return getXPath(el.parentElement) + `/${el.tagName.toLowerCase()}${index}`;
+      }
+      return getXPath(el);
+    });
+
+    // Wypisz znalezione lokatory
+    console.log(`📌 Element: <${tagName}>`);
+    console.log(`  - CSS: ${locators.join(", ") || "Brak"}`);
+    console.log(`  - XPath: ${xpath}`);
+  }
+}
+
+
+
+
+// functions/checkImagesWithRelativeURLs.ts
+
+
+export async function checkImagesWithRelativeURLs(page: Page, baseUrl: string): Promise<void> {
+  const images = await page.locator("img");
+  const imageCount = await images.count();
+
+  for (let i = 0; i < imageCount; i++) {
+    const image = images.nth(i);
+    const src = await image.getAttribute("src");
+    expect(src).toBeTruthy(); // should have src
+
+    let fullSrc = src;
+    if (fullSrc && !fullSrc.startsWith("http")) {
+      fullSrc = baseUrl + fullSrc;
+    }
+
+    if (fullSrc) {
+      const response = await page.request.get(fullSrc); // Request to check if image is valid
+      expect(response.status()).toBe(200); // Image should return status 200
+    }
+  }
+}
+
+
+export async function gatherImagesCheckHowManyPolish(page: Page, baseUrl: string): Promise<void> {
+  // gather all images
+  const images = await page.locator("img");
+
+  // check how many images
+  const imageCount = await images.count();
+
+  for (let i = 0; i < imageCount; i++) {
+    const image = images.nth(i);
+
+    // does img have src attribute?
     const src = await image.getAttribute("src");
     expect(src).toBeTruthy(); // is src null?
 
@@ -139,117 +265,18 @@ export async function gatherImagesCheckHowMany(page: Page, baseUrl: string): Pro
     // If the URL is relative, we add the full domain
     let fullSrc = src;
     if (fullSrc && !fullSrc.startsWith("http")) {
-      fullSrc = "https://m24-ploom-uk.jtides.com" + fullSrc;
+      fullSrc = baseUrl + fullSrc;
     }
 
-    // to chceck http status i use fetch()
+    // Extract domain from the image URL
     if (fullSrc) {
-      const response = await page.request.get(fullSrc); // calling http about img
+      const url = new URL(fullSrc);
+      console.log(`🌐 Domeną obrazu jest: ${url.hostname}`);
+      
+      // Check the image status
+      const response = await page.request.get(fullSrc); // calling HTTP about img
       expect(response.status()).toBe(200); // should be 200 status
     }
   }
 };
 
-/*
-import { expect } from "@playwright/test";
-
-export async function verifyImageSrcVisibilityStatus(page: Page): Promise<void> {
-  // Gather all images
-  const images = page.locator("img");
-
-  // Check how many images
-  const imageCount = await images.count();
-
-  for (let i = 0; i < imageCount; i++) {
-    const image = images.nth(i);
-
-    // Does img have src attribute?
-    const src = await image.getAttribute("src");
-    expect(src).toBeTruthy(); // Is src null?
-
-    // Is it shown on page?
-    const isVisible = await image.isVisible();
-    expect(isVisible).toBe(true); // Has to be visible, otherwise bug :D
-
-    // If the URL is relative, we add the full domain
-    let fullSrc = src;
-    if (fullSrc && !fullSrc.startsWith("http")) {
-      fullSrc = "https://m24-ploom-uk.jtides.com" + fullSrc;
-    }
-
-    // To check HTTP status, use fetch()
-    if (fullSrc) {
-      const response = await page.request.get(fullSrc); // Calling HTTP request for the image
-      expect(response.status()).toBe(200); // Should be 200 status
-    }
-  }
-}
-
-*/
-
-// helpers.ts
-// import { expect, Locator } from '@playwright/test';
-
-// export async function verifyImageSrcVisibilityStatus(
-//   page: Page,
-//   domain: string,
-//   imageLocator: Locator
-// ): Promise<void> {
-//   const images = imageLocator;
-//   const imageCount = await images.count();
-
-//   for (let i = 0; i < imageCount; i++) {
-//     const image = images.nth(i);
-
-//     const src = await image.getAttribute('src');
-//     expect(src).toBeTruthy();
-
-//     await expect(image).toBeVisible();
-
-//     let fullSrc = src;
-//     if (fullSrc && !fullSrc.startsWith('http')) {
-//       fullSrc = domain + fullSrc;
-//     }
-
-//     if (fullSrc) {
-//       try {
-//         const response = await page.request.get(fullSrc);
-//         expect(response.status()).toBe(200);
-//       } catch (error) {
-//         console.error(`Błąd podczas sprawdzania statusu HTTP obrazka: ${fullSrc}`, error);
-//         expect(true).toBe(false); // test fail when error
-//       }
-//     }
-//   }
-// }
-
-// export async function verifyImageSrcVisibilityStatus(page: Page): Promise<void> {
-//   // gather all images
-//   const images = await page.locator("img");
-
-//   // check how many images
-//   const imageCount = await images.count();
-//   for (let i = 0; i < imageCount; i++) {
-//     const image = images.nth(i);
-
-//     // does img has src atribute?
-//     const src = await image.getAttribute("src");
-//     expect(src).toBeTruthy(); // is src null?
-
-//     // is shown on page?
-//     const isVisible = await image.isVisible();
-//     expect(isVisible).toBe(true); // has to be visible otherwise bug :d
-//     await expect(elementLocator).toBeVisible();
-//     // If the URL is relative, we add the full domain
-//     let fullSrc = src;
-//     if (fullSrc && !fullSrc.startsWith("http")) {
-//       fullSrc = "https://m24-ploom-uk.jtides.com" + fullSrc;
-//     }
-
-//     // to chceck http status i use fetch()
-//     if (fullSrc) {
-//       const response = await page.request.get(fullSrc); // calling http about img
-//       expect(response.status()).toBe(200); // should be 200 status
-//     }
-//   }
-// }
