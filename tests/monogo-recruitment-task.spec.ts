@@ -76,21 +76,10 @@ test("Verify if it is possible to remove a product from the cart", async ({
   await expect(elementsPage.cartQuantity).toHaveValue("1");
   await elementsPage.cartQuantity.press("Enter");
   await elementsPage.miniCartCheckoutButton.click();
-
-  // await page.goto("https://www.ploom.co.uk/en/cart-n-checkout#/", { waitUntil: "domcontentloaded" });
   await page.goto("https://www.ploom.co.uk/en/cart-n-checkout#/");
   await quantityMinus(page);
-  // 1st assertion
   await expect(elementsPage.youHaveNoItems).toBeVisible();
-  // sprobujemy innej metody innego lokatora
-  // await elementsPage.miniBasket1.click();
   await elementsPage.miniBasket.click();
-
-  // await page.goto('https://www.ploom.co.uk/en/cart-n-checkout#/');
-
-  // await page.getByTestId('regular-cart-list').getByTestId('quantityMinus').click();
-  // await page.getByTestId('cartIcon').locator('path').click();
-  // await page.getByTestId('cartIcon').locator('path').click();
   await elementsPage.emptyCartContainer.click();
   await expect(elementsPage.emptyCartContainer).toHaveText(
     "There are no products in your cart at the moment."

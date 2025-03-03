@@ -4,7 +4,9 @@ import { Page } from "@playwright/test";
 // export const productDescriptionText = "/^A unique Heated Tobacco Xperience.*$/";
 export const productDescriptionText = /^A unique Heated Tobacco Xperience.*$/;
 export const linkToCartNCheckout = "https://www.ploom.co.uk/en/cart-n-checkout#/";
+export const linkToCartNCheckoutPolish = "https://www.ploom.pl/pl/cart#/";
 export const linkToProductPloomXAdvanced = "https://www.ploom.co.uk/en/shop/products/devices/ploom-x-advanced";
+export const linkToProductPloomXAdvancedBronzePolish = "https://www.ploom.pl/pl/sklep/produkty/urzadzenie/ploom-x-advanced-niebieski";
 export async function closeShopMenuIfVisible(page: Page): Promise<void> {
   if (
     await page
@@ -19,8 +21,10 @@ export async function closeShopMenuIfVisible(page: Page): Promise<void> {
   } else {
     console.log("'CloseShopMenu' element has not been found. Test goes on.");
   }
-}
-export async function quantityMinus(page: Page): Promise<void> {
+};
+
+export async function quantityMinus(page: Page): Promise<void> 
+{
 if (
     await page
       .getByTestId("regular-cart-list")
@@ -36,6 +40,32 @@ if (
       "The quantity minus button is not available, test aborted."
     );
   }
+};
+/*
+export async function quantityMinusPolish(page: Page): Promise<void> 
+{
+if (
+    await page
+      .getByTestId('regular-cart-list').getByTestId('quantityMinus')
+      .isVisible()
+  ) {
+    await page
+      .getByTestId('regular-cart-list').getByTestId('quantityMinus')
+      .click()
+  } else {
+    throw new Error(
+      "The quantity minus button is not available, test aborted."
+    );
+  }
+};
+*/
+
+export async function quantityMinusPolish(page: Page): Promise<void> {
+  const button = page.getByTestId('regular-cart-list').getByTestId('quantityMinus');
+
+  await button.waitFor({ state: 'visible', timeout: 5000 });
+
+  await button.click();
 }
 
 
@@ -85,7 +115,7 @@ export async function verifyAllLinksOnPage(page: Page, baseUrl: string): Promise
       console.log(`❌ Link: ${fullHref} has an invalid URL`);
     }
   }
-}
+};
 
 export async function gatherImagesCheckHowMany(page: Page, baseUrl: string): Promise<void> 
 {
@@ -118,7 +148,7 @@ export async function gatherImagesCheckHowMany(page: Page, baseUrl: string): Pro
       expect(response.status()).toBe(200); // should be 200 status
     }
   }
-}
+};
 
 /*
 import { expect } from "@playwright/test";
