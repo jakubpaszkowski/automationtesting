@@ -12,32 +12,25 @@ import {
   quantityMinusPolish,
   verifyAllLinksOnPage,
   collectAllLocators,
-  checkImagesWithRelativeURLs
+  checkImagesWithRelativeURLs,
+  urlPolish,
+  addProductToCartAndGoToCheckout
 } from "../test-data/monogo-helpers.ts";
 
 test("Verify if it is possible to add a product to the cart.", async ({
   page,
 }) => {
   const elementsPage = new SimpleElements(page);
-  await page.goto("https://www.ploom.pl/pl");
+  await page.goto(urlPolish);
 
   await elementsPage.buttonCookiesAcceptPolish.click();
   await elementsPage.ageConfirmation.click();
   await elementsPage.shopDropMenu.click();
   await closeShopMenuIfVisible(page);
   await page.getByText("Sklep Sklep Zobacz wszystkie").click();
-  /*
-  await elementsPage.ploomXAdvanced.click({ force: true });
- */
-
-  //   await page.locator('[data-sku="16103192"]').click();
   await elementsPage.buttonProductPloomXAdvancedBluePolish.click();
   await page.waitForURL(linkToProductPloomXAdvancedBronzePolish);
   await expect(elementsPage.headingPloomXAdvancedBlue).toBeVisible();
-
-  //   await expect(elementsPage.buttonProductPloomXAdvancedBronzePolish).toBeVisible();
-  //   await elementsPage.buttonProductPloomXAdvancedBronzePolish.click();
-
   await elementsPage.buttonAddToCart.click();
 
   await elementsPage.cartQuantity.click();
@@ -46,11 +39,6 @@ test("Verify if it is possible to add a product to the cart.", async ({
   await expect(
     page.getByTestId("regular-cart-list").getByText("X to unikalne połączenie")
   ).toBeVisible();
-  /* 
-  await expect(elementsPage.productDescription).toContainText(
-    "A unique Heated Tobacco Xperience"
-  );
-  */
   await expect(page.url()).toBe(linkToCartNCheckoutPolish);
   await expect(elementsPage.loginCheckoutButton).toBeVisible();
   await elementsPage.loginCheckoutButton.click();
@@ -60,7 +48,10 @@ test("Verify if it is possible to remove a product from the cart", async ({
   page,
 }) => {
   const elementsPage = new SimpleElements(page);
-  await page.goto("https://www.ploom.pl/pl");
+    await addProductToCartAndGoToCheckoutPolish(page);
+    /*
+  const elementsPage = new SimpleElements(page);
+  await page.goto(urlPolish);
 
   await elementsPage.buttonCookiesAcceptPolish.click();
   await elementsPage.ageConfirmation.click();
@@ -76,6 +67,7 @@ test("Verify if it is possible to remove a product from the cart", async ({
   await elementsPage.cartQuantity.click();
   await expect(elementsPage.cartQuantity).toHaveValue("1");
   await elementsPage.miniCartCheckoutButton.click();
+  */
 
   await page.goto("https://www.ploom.pl/pl/cart#/");
   await quantityMinusPolish(page);
@@ -90,18 +82,7 @@ test("Verify if there are any broken links or images on the product page.", asyn
   page,
 }) => {
   const elementsPage = new SimpleElements(page);
-  await page.goto("https://www.ploom.pl/pl");
-/*
-  await elementsPage.buttonCookiesAcceptPolish.click();;
-  await elementsPage.ageConfirmation.click();
-  await elementsPage.buttonNavigationLink.first().click();
-  await closeShopMenuIfVisible(page);
-  await elementsPage.ploomXAdvanced.click({ force: true });
-  await page.waitForURL(linkToProductPloomXAdvanced);
-  await expect(elementsPage.ploomXAdvancedProduct).toBeVisible();
-  await elementsPage.ploomXAdvancedProduct.click();
-*/
-
+  await page.goto(urlPolish);
 await elementsPage.buttonCookiesAcceptPolish.click();
 await elementsPage.ageConfirmation.click();
 await elementsPage.shopDropMenu.click();
@@ -110,44 +91,15 @@ await elementsPage.shopButtonPolish.click();
 await elementsPage.buttonProductPloomXAdvancedBluePolish.click();
 await page.waitForURL(linkToProductPloomXAdvancedBronzePolish);
 await expect(elementsPage.headingPloomXAdvancedBlue).toBeVisible();
-
   await verifyAllLinksOnPage(page, "https://www.ploom.pl");
-/*
-  await page.goto("https://www.ploom.pl/pl");
-  await expect.soft(elementsPage.item800808000Polish).toBeVisible();
-//   await page.locator('role=link[name="Terms of Service"]').waitFor({ state: 'visible' });
-// Najpierw poczekaj na widoczność elementu
-await elementsPage.forMoreInformation.waitFor({ state: 'visible' });
-
-// Następnie sprawdź widoczność elementu za pomocą expect
-await expect.soft(elementsPage.forMoreInformation).toBeVisible();  
-
-await expect.soft(elementsPage.forMoreInformation).toBeVisible();
-  await expect.soft(elementsPage.privacyPolicyPolish).toBeVisible();
-  await expect.soft(elementsPage.termsOfService).toBeVisible();
-  await expect.soft(elementsPage.supportPolish).toBeVisible();
-  await expect.soft(elementsPage.itemsContactUsPolish).toBeVisible();
-  await expect.soft(elementsPage.itemsFaqPolish).toBeVisible();
-  await expect.soft(elementsPage.itemsProductHelpPolish).toBeVisible();
-  await expect.soft(elementsPage.deliveryReturnsPolish).toBeVisible();
-  await expect.soft(elementsPage.itemsDeliveryPolish).toBeVisible();
-
-  await expect.soft(elementsPage.itemsList1Returns).toBeVisible();
-  await expect.soft(elementsPage.itemsWhyPloomPolish).toBeVisible();
-
-  await expect.soft(elementsPage.companyPolish).toBeVisible();
-  await expect.soft(elementsPage.itemsTermsOfUsePolish).toBeVisible();
-
-  await expect.soft(elementsPage.itemsTermsOfSalePolish).toBeVisible();
-  await expect.soft(elementsPage.itemsList2Environment).toBeVisible();
-  */
   await gatherImagesCheckHowMany(page, "https://m24-ploom-pl.jtides.com");
   await gatherImagesCheckHowMany(page, "www.ploom.pl");
-  // 
+  
 });
 
 
 import { Page } from "@playwright/test";
+import { addProductToCartAndGoToCheckoutPolish } from "../test-data/monogo-helpers-polish.ts";
 
 export async function findInvalidLinks(page: Page): Promise<void> {
   const links = page.locator("a");

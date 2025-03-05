@@ -1,11 +1,13 @@
 import { test, expect } from "@playwright/test";
 import { SimpleElements } from "../pages/monogo.page";
 import {
+  addProductToCartAndGoToCheckoutEnglish,
   closeShopMenuIfVisible,
   gatherImagesCheckHowMany,
   linkToCartNCheckout,
   linkToProductPloomXAdvanced,
   quantityMinus,
+  urlEnglish,
   verifyAllLinksOnPage,
 } from "../test-data/monogo-helpers.ts";
 
@@ -13,7 +15,7 @@ test("Verify if it is possible to add a product to the cart.", async ({
   page,
 }) => {
   const elementsPage = new SimpleElements(page);
-  await page.goto("https://www.ploom.co.uk/en");
+  await page.goto(urlEnglish);
   await elementsPage.buttonCookiesAccept.click();
   await elementsPage.ageConfirmation.click();
   await elementsPage.shopDropMenu.click();
@@ -62,7 +64,10 @@ test("Verify if it is possible to remove a product from the cart", async ({
   page,
 }) => {
   const elementsPage = new SimpleElements(page);
-  await page.goto("https://www.ploom.co.uk/en");
+  await addProductToCartAndGoToCheckoutEnglish(page);
+  // await addProductToCartAndGoToCheckoutEnglish(page);
+  /*
+  await page.goto(urlEnglish);
   await elementsPage.buttonCookiesAccept.click();
   await elementsPage.ageConfirmation.click();
   await elementsPage.shopDropMenu.click();
@@ -76,6 +81,9 @@ test("Verify if it is possible to remove a product from the cart", async ({
   await expect(elementsPage.cartQuantity).toHaveValue("1");
   await elementsPage.cartQuantity.press("Enter");
   await elementsPage.miniCartCheckoutButton.click();
+  */
+
+
   await page.goto("https://www.ploom.co.uk/en/cart-n-checkout#/");
   await quantityMinus(page);
   await expect(elementsPage.youHaveNoItems).toBeVisible();
@@ -194,7 +202,7 @@ test("Verify if there are any broken links or images on the product page.", asyn
   page,
 }) => {
   const elementsPage = new SimpleElements(page);
-  await page.goto("https://www.ploom.co.uk/en");
+  await page.goto(urlEnglish);
 
   await elementsPage.buttonCookiesAccept.click();
   await elementsPage.buttonAgeConfirmation.first().click();

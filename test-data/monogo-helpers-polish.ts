@@ -11,30 +11,37 @@ export const linkToProductPloomXAdvanced = "https://www.ploom.co.uk/en/shop/prod
 export const linkToProductPloomXAdvancedBronzePolish = "https://www.ploom.pl/pl/sklep/produkty/urzadzenie/ploom-x-advanced-niebieski";
 
 
-export async function addProductToCartAndGoToCheckoutEnglish(page) {
-    
-const elementsPage = new SimpleElements(page);
-await page.goto(urlEnglish);
-await elementsPage.buttonCookiesAccept.click();
-await elementsPage.ageConfirmation.click();
-await elementsPage.shopDropMenu.click();
-await closeShopMenuIfVisible(page);
-await elementsPage.ploomXAdvanced.click({ force: true });
-await page.waitForURL(linkToProductPloomXAdvanced);
-await expect(elementsPage.ploomXAdvancedProduct).toBeVisible();
-await elementsPage.ploomXAdvancedProduct.click();
-await elementsPage.buttonAddToCart.click();
-await elementsPage.cartQuantity.click();
-await expect(elementsPage.cartQuantity).toHaveValue("1");
-await elementsPage.miniCartCheckoutButton.click();
-await expect(elementsPage.productDescription).toContainText(
-  "A unique Heated Tobacco Xperience"
-);
-await expect(page.url()).toBe(linkToCartNCheckout);
-await expect(elementsPage.loginCheckoutButton).toBeVisible();
-  }
-
+export async function addProductToCartAndGoToCheckoutPolish(page) {
+    const elementsPage = new SimpleElements(page);
+    await page.goto(urlPolish);
   
+    await elementsPage.buttonCookiesAcceptPolish.click();
+    await elementsPage.ageConfirmation.click();
+    await elementsPage.shopDropMenu.click();
+    await closeShopMenuIfVisible(page);
+    await page.getByText("Sklep Sklep Zobacz wszystkie").click();
+  
+    await elementsPage.buttonProductPloomXAdvancedBluePolish.click();
+    await page.waitForURL(linkToProductPloomXAdvancedBronzePolish);
+    await expect(elementsPage.headingPloomXAdvancedBlue).toBeVisible();
+  
+    await elementsPage.buttonAddToCart.click();
+    await elementsPage.cartQuantity.click();
+    await expect(elementsPage.cartQuantity).toHaveValue("1");
+  
+    await elementsPage.miniCartCheckoutButton.click();
+    await expect(
+      page.getByTestId("regular-cart-list").getByText("X to unikalne połączenie")
+    ).toBeVisible();
+    await expect(page.url()).toBe(linkToCartNCheckoutPolish);
+    await expect(elementsPage.loginCheckoutButton).toBeVisible();
+  }
+  
+
+
+
+
+
 export async function closeShopMenuIfVisible(page: Page): Promise<void> {
   if (
     await page
@@ -98,7 +105,7 @@ export async function quantityMinusPolish(page: Page): Promise<void> {
 
 
 import { expect } from "@playwright/test";
-import { SimpleElements } from "../pages/monogo.page";
+import { SimpleElements } from "../pages/monogo-polish.page";
 
 export async function verifyAllLinksOnPage(page: Page, baseUrl: string): Promise<void> {
   // Gather all links
