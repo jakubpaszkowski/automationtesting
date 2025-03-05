@@ -76,24 +76,7 @@ if (
     );
   }
 };
-/*
-export async function quantityMinusPolish(page: Page): Promise<void> 
-{
-if (
-    await page
-      .getByTestId('regular-cart-list').getByTestId('quantityMinus')
-      .isVisible()
-  ) {
-    await page
-      .getByTestId('regular-cart-list').getByTestId('quantityMinus')
-      .click()
-  } else {
-    throw new Error(
-      "The quantity minus button is not available, test aborted."
-    );
-  }
-};
-*/
+
 
 export async function quantityMinusPolish(page: Page): Promise<void> {
   const button = page.getByTestId('regular-cart-list').getByTestId('quantityMinus');

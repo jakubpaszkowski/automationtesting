@@ -1,4 +1,4 @@
-import { test, expect, chromium } from "@playwright/test";
+import { test, Page, expect, chromium } from "@playwright/test";
 import { SimpleElements } from "../pages/monogo-polish.page.ts";
 import {
   closeShopMenuIfVisible,
@@ -16,6 +16,7 @@ import {
   urlPolish,
   addProductToCartAndGoToCheckout
 } from "../test-data/monogo-helpers.ts";
+import { addProductToCartAndGoToCheckoutPolish } from "../test-data/monogo-helpers-polish.ts";
 
 test("Verify if it is possible to add a product to the cart.", async ({
   page,
@@ -79,8 +80,7 @@ await expect(elementsPage.headingPloomXAdvancedBlue).toBeVisible();
 });
 
 
-import { Page } from "@playwright/test";
-import { addProductToCartAndGoToCheckoutPolish } from "../test-data/monogo-helpers-polish.ts";
+
 
 export async function findInvalidLinks(page: Page): Promise<void> {
   const links = page.locator("a");
