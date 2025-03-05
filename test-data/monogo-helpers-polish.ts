@@ -8,7 +8,7 @@ export const productDescriptionText = /^A unique Heated Tobacco Xperience.*$/;
 export const linkToCartNCheckout = "https://www.ploom.co.uk/en/cart-n-checkout#/";
 export const linkToCartNCheckoutPolish = "https://www.ploom.pl/pl/cart#/";
 export const linkToProductPloomXAdvanced = "https://www.ploom.co.uk/en/shop/products/devices/ploom-x-advanced";
-export const linkToProductPloomXAdvancedBronzePolish = "https://www.ploom.pl/pl/sklep/produkty/urzadzenie/ploom-x-advanced-niebieski";
+export const linkToProductPloomXAdvancedBluePolish = "https://www.ploom.pl/pl/sklep/produkty/urzadzenie/ploom-x-advanced-niebieski";
 
 
 export async function addProductToCartAndGoToCheckoutPolish(page) {
@@ -22,7 +22,7 @@ export async function addProductToCartAndGoToCheckoutPolish(page) {
     await page.getByText("Sklep Sklep Zobacz wszystkie").click();
   
     await elementsPage.buttonProductPloomXAdvancedBluePolish.click();
-    await page.waitForURL(linkToProductPloomXAdvancedBronzePolish);
+    await page.waitForURL(linkToProductPloomXAdvancedBluePolish);
     await expect(elementsPage.headingPloomXAdvancedBlue).toBeVisible();
   
     await elementsPage.buttonAddToCart.click();
@@ -37,7 +37,21 @@ export async function addProductToCartAndGoToCheckoutPolish(page) {
     await expect(elementsPage.loginCheckoutButton).toBeVisible();
   }
   
-
+  export async function goToProductPagePolish(page) {
+    const elementsPage = new SimpleElements(page);
+    await page.goto(urlPolish);
+  
+    await elementsPage.buttonCookiesAcceptPolish.click();
+    await elementsPage.ageConfirmation.click();
+    await elementsPage.shopDropMenu.click();
+    await closeShopMenuIfVisible(page);
+    await page.getByText("Sklep Sklep Zobacz wszystkie").click();
+  
+    await elementsPage.buttonProductPloomXAdvancedBluePolish.click();
+    await page.waitForURL(linkToProductPloomXAdvancedBluePolish);
+    await expect(elementsPage.headingPloomXAdvancedBlue).toBeVisible();
+  
+  }
 
 
 

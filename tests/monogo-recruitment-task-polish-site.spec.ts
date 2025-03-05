@@ -16,7 +16,7 @@ import {
   urlPolish,
   addProductToCartAndGoToCheckout
 } from "../test-data/monogo-helpers.ts";
-import { addProductToCartAndGoToCheckoutPolish } from "../test-data/monogo-helpers-polish.ts";
+import { addProductToCartAndGoToCheckoutPolish, goToProductPagePolish, linkToProductPloomXAdvancedBluePolish } from "../test-data/monogo-helpers-polish.ts";
 
 test("Verify if it is possible to add a product to the cart.", async ({
   page,
@@ -71,15 +71,29 @@ await elementsPage.shopDropMenu.click();
 await closeShopMenuIfVisible(page);
 await elementsPage.shopButtonPolish.click();
 await elementsPage.buttonProductPloomXAdvancedBluePolish.click();
-await page.waitForURL(linkToProductPloomXAdvancedBronzePolish);
+await page.waitForURL(linkToProductPloomXAdvancedBluePolish);
 await expect(elementsPage.headingPloomXAdvancedBlue).toBeVisible();
+
+
   await verifyAllLinksOnPage(page, "https://www.ploom.pl");
   await gatherImagesCheckHowMany(page, "https://m24-ploom-pl.jtides.com");
   await gatherImagesCheckHowMany(page, "www.ploom.pl");
   
 });
 
+test("Verify if there are any broken links or images on the product page #2", async ({
+  page,
+}) => {
+  const elementsPage = new SimpleElements(page);
+ await goToProductPagePolish(page);
 
+
+  await verifyAllLinksOnPage(page, linkToProductPloomXAdvancedBronzePolish);
+  await gatherImagesCheckHowMany(page, linkToProductPloomXAdvancedBronzePolish);
+  // to chyba mozna usunac 
+  // await gatherImagesCheckHowMany(page, "www.ploom.pl");
+  
+});
 
 
 export async function findInvalidLinks(page: Page): Promise<void> {

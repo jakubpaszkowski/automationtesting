@@ -3,6 +3,7 @@
 import { Page } from "@playwright/test";
 // export const productDescriptionText = "/^A unique Heated Tobacco Xperience.*$/";
 export const urlEnglish = "https://www.ploom.co.uk/en";
+export const urlEnglishCheckout = "https://www.ploom.co.uk/en/cart-n-checkout#/";
 export const urlPolish = "https://www.ploom.pl/pl";
 export const productDescriptionText = /^A unique Heated Tobacco Xperience.*$/;
 export const linkToCartNCheckout = "https://www.ploom.co.uk/en/cart-n-checkout#/";
@@ -34,6 +35,20 @@ await expect(page.url()).toBe(linkToCartNCheckout);
 await expect(elementsPage.loginCheckoutButton).toBeVisible();
   }
 
+
+ export async function goToProductPageEnglish(page) {
+  const elementsPage = new SimpleElements(page);
+  await page.goto(urlEnglish);
+  await elementsPage.buttonCookiesAccept.click();
+  await elementsPage.ageConfirmation.click();
+  await elementsPage.shopDropMenu.click();
+  await closeShopMenuIfVisible(page);
+  await elementsPage.ploomXAdvanced.click({ force: true });
+  await page.waitForURL(linkToProductPloomXAdvanced);
+  await expect(elementsPage.ploomXAdvancedProduct).toBeVisible();
+  await elementsPage.ploomXAdvancedProduct.click();
+  
+  }
   
 export async function closeShopMenuIfVisible(page: Page): Promise<void> {
   if (

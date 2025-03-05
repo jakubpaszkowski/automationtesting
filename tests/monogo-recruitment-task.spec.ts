@@ -4,10 +4,12 @@ import {
   addProductToCartAndGoToCheckoutEnglish,
   closeShopMenuIfVisible,
   gatherImagesCheckHowMany,
+  goToProductPageEnglish,
   linkToCartNCheckout,
   linkToProductPloomXAdvanced,
   quantityMinus,
   urlEnglish,
+  urlEnglishCheckout,
   verifyAllLinksOnPage,
 } from "../test-data/monogo-helpers.ts";
 
@@ -41,7 +43,7 @@ test("Verify if it is possible to remove a product from the cart", async ({
 }) => {
   const elementsPage = new SimpleElements(page);
   await addProductToCartAndGoToCheckoutEnglish(page);
-  await page.goto("https://www.ploom.co.uk/en/cart-n-checkout#/");
+  await page.goto(urlEnglishCheckout);
   await quantityMinus(page);
   await expect(elementsPage.youHaveNoItems).toBeVisible();
   await elementsPage.miniBasket.click();
@@ -84,5 +86,16 @@ test("Verify if there are any broken links or images on the product page.", asyn
   await expect.soft(elementsPage.itemsList1Terms).toBeEnabled();
   await expect.soft(elementsPage.itemsList2Environment).toBeEnabled();
   await gatherImagesCheckHowMany(page, "https://m24-ploom-uk.jtides.com");
+
+});
+
+test("Verify if there are any broken links or images on the product page #2", async ({
+  page,
+}) => {
+  const elementsPage = new SimpleElements(page);
+  await goToProductPageEnglish(page);
+  await verifyAllLinksOnPage(page, linkToProductPloomXAdvanced);
+  await gatherImagesCheckHowMany(page, linkToProductPloomXAdvanced);
+
 
 });
