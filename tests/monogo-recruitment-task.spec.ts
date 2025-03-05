@@ -65,25 +65,6 @@ test("Verify if it is possible to remove a product from the cart", async ({
 }) => {
   const elementsPage = new SimpleElements(page);
   await addProductToCartAndGoToCheckoutEnglish(page);
-  // await addProductToCartAndGoToCheckoutEnglish(page);
-  /*
-  await page.goto(urlEnglish);
-  await elementsPage.buttonCookiesAccept.click();
-  await elementsPage.ageConfirmation.click();
-  await elementsPage.shopDropMenu.click();
-  await closeShopMenuIfVisible(page);
-  await elementsPage.ploomXAdvanced.click({ force: true });
-  await page.waitForURL(linkToProductPloomXAdvanced);
-  await expect(elementsPage.ploomXAdvancedProduct).toBeVisible();
-  await elementsPage.ploomXAdvancedProduct.click();
-  await elementsPage.buttonAddToCart.click();
-  await elementsPage.cartQuantity.click();
-  await expect(elementsPage.cartQuantity).toHaveValue("1");
-  await elementsPage.cartQuantity.press("Enter");
-  await elementsPage.miniCartCheckoutButton.click();
-  */
-
-
   await page.goto("https://www.ploom.co.uk/en/cart-n-checkout#/");
   await quantityMinus(page);
   await expect(elementsPage.youHaveNoItems).toBeVisible();
