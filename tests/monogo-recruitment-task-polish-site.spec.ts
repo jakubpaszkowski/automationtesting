@@ -49,6 +49,7 @@ test("Verify if it is possible to remove a product from the cart", async ({
 }) => {
   const elementsPage = new SimpleElements(page);
     await addProductToCartAndGoToCheckoutPolish(page);
+    
     /*
   const elementsPage = new SimpleElements(page);
   await page.goto(urlPolish);
