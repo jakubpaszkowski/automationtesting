@@ -48,28 +48,8 @@ test("Verify if it is possible to remove a product from the cart", async ({
   page,
 }) => {
   const elementsPage = new SimpleElements(page);
-    await addProductToCartAndGoToCheckoutPolish(page);
-    
-    /*
-  const elementsPage = new SimpleElements(page);
-  await page.goto(urlPolish);
 
-  await elementsPage.buttonCookiesAcceptPolish.click();
-  await elementsPage.ageConfirmation.click();
-  await elementsPage.shopDropMenu.click();
-  await closeShopMenuIfVisible(page);
-  await elementsPage.shopButtonPolish.click();
-  await elementsPage.buttonProductPloomXAdvancedBluePolish.click();
-  await page.waitForURL(linkToProductPloomXAdvancedBronzePolish);
-  await expect(elementsPage.headingPloomXAdvancedBlue).toBeVisible();
-
-  await elementsPage.buttonAddToCart.click();
-
-  await elementsPage.cartQuantity.click();
-  await expect(elementsPage.cartQuantity).toHaveValue("1");
-  await elementsPage.miniCartCheckoutButton.click();
-  */
-
+  await addProductToCartAndGoToCheckoutPolish(page);
   await page.goto("https://www.ploom.pl/pl/cart#/");
   await quantityMinusPolish(page);
   await expect(elementsPage.emptyContainerInfoTextPolish).toBeVisible();
