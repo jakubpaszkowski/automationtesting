@@ -53,7 +53,6 @@ test("Verify if it is possible to remove a product from the cart", async ({
   );
 });
 
-
 test("Verify if there are any broken links or images on the product page.", async ({
   page,
 }) => {
@@ -86,7 +85,6 @@ test("Verify if there are any broken links or images on the product page.", asyn
   await expect.soft(elementsPage.itemsList1Terms).toBeEnabled();
   await expect.soft(elementsPage.itemsList2Environment).toBeEnabled();
   await gatherImagesCheckHowMany(page, "https://m24-ploom-uk.jtides.com");
-
 });
 
 test("Verify if there are any broken links or images on the product page #2", async ({
@@ -96,6 +94,4 @@ test("Verify if there are any broken links or images on the product page #2", as
   await goToProductPageEnglish(page);
   await verifyAllLinksOnPage(page, linkToProductPloomXAdvanced);
   await gatherImagesCheckHowMany(page, linkToProductPloomXAdvanced);
-
-
 });

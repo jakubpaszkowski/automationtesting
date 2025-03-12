@@ -5,56 +5,54 @@ import { Page } from "@playwright/test";
 export const urlEnglish = "https://www.ploom.co.uk/en";
 export const urlPolish = "https://www.ploom.pl/pl";
 export const productDescriptionText = /^A unique Heated Tobacco Xperience.*$/;
-export const linkToCartNCheckout = "https://www.ploom.co.uk/en/cart-n-checkout#/";
+export const linkToCartNCheckout =
+  "https://www.ploom.co.uk/en/cart-n-checkout#/";
 export const linkToCartNCheckoutPolish = "https://www.ploom.pl/pl/cart#/";
-export const linkToProductPloomXAdvanced = "https://www.ploom.co.uk/en/shop/products/devices/ploom-x-advanced";
-export const linkToProductPloomXAdvancedBluePolish = "https://www.ploom.pl/pl/sklep/produkty/urzadzenie/ploom-x-advanced-niebieski";
-
+export const linkToProductPloomXAdvanced =
+  "https://www.ploom.co.uk/en/shop/products/devices/ploom-x-advanced";
+export const linkToProductPloomXAdvancedBluePolish =
+  "https://www.ploom.pl/pl/sklep/produkty/urzadzenie/ploom-x-advanced-niebieski";
 
 export async function addProductToCartAndGoToCheckoutPolish(page) {
-    const elementsPage = new SimpleElements(page);
-    await page.goto(urlPolish);
-  
-    await elementsPage.buttonCookiesAcceptPolish.click();
-    await elementsPage.ageConfirmation.click();
-    await elementsPage.shopDropMenu.click();
-    await closeShopMenuIfVisible(page);
-    await page.getByText("Sklep Sklep Zobacz wszystkie").click();
-  
-    await elementsPage.buttonProductPloomXAdvancedBluePolish.click();
-    await page.waitForURL(linkToProductPloomXAdvancedBluePolish);
-    await expect(elementsPage.headingPloomXAdvancedBlue).toBeVisible();
-  
-    await elementsPage.buttonAddToCart.click();
-    await elementsPage.cartQuantity.click();
-    await expect(elementsPage.cartQuantity).toHaveValue("1");
-  
-    await elementsPage.miniCartCheckoutButton.click();
-    await expect(
-      page.getByTestId("regular-cart-list").getByText("X to unikalne połączenie")
-    ).toBeVisible();
-    await expect(page.url()).toBe(linkToCartNCheckoutPolish);
-    await expect(elementsPage.loginCheckoutButton).toBeVisible();
-  }
-  
-  export async function goToProductPagePolish(page) {
-    const elementsPage = new SimpleElements(page);
-    await page.goto(urlPolish);
-  
-    await elementsPage.buttonCookiesAcceptPolish.click();
-    await elementsPage.ageConfirmation.click();
-    await elementsPage.shopDropMenu.click();
-    await closeShopMenuIfVisible(page);
-    await page.getByText("Sklep Sklep Zobacz wszystkie").click();
-  
-    await elementsPage.buttonProductPloomXAdvancedBluePolish.click();
-    await page.waitForURL(linkToProductPloomXAdvancedBluePolish);
-    await expect(elementsPage.headingPloomXAdvancedBlue).toBeVisible();
-  
-  }
+  const elementsPage = new SimpleElements(page);
+  await page.goto(urlPolish);
 
+  await elementsPage.buttonCookiesAcceptPolish.click();
+  await elementsPage.ageConfirmation.click();
+  await elementsPage.shopDropMenu.click();
+  await closeShopMenuIfVisible(page);
+  await page.getByText("Sklep Sklep Zobacz wszystkie").click();
 
+  await elementsPage.buttonProductPloomXAdvancedBluePolish.click();
+  await page.waitForURL(linkToProductPloomXAdvancedBluePolish);
+  await expect(elementsPage.headingPloomXAdvancedBlue).toBeVisible();
 
+  await elementsPage.buttonAddToCart.click();
+  await elementsPage.cartQuantity.click();
+  await expect(elementsPage.cartQuantity).toHaveValue("1");
+
+  await elementsPage.miniCartCheckoutButton.click();
+  await expect(
+    page.getByTestId("regular-cart-list").getByText("X to unikalne połączenie")
+  ).toBeVisible();
+  await expect(page.url()).toBe(linkToCartNCheckoutPolish);
+  await expect(elementsPage.loginCheckoutButton).toBeVisible();
+}
+
+export async function goToProductPagePolish(page) {
+  const elementsPage = new SimpleElements(page);
+  await page.goto(urlPolish);
+
+  await elementsPage.buttonCookiesAcceptPolish.click();
+  await elementsPage.ageConfirmation.click();
+  await elementsPage.shopDropMenu.click();
+  await closeShopMenuIfVisible(page);
+  await page.getByText("Sklep Sklep Zobacz wszystkie").click();
+
+  await elementsPage.buttonProductPloomXAdvancedBluePolish.click();
+  await page.waitForURL(linkToProductPloomXAdvancedBluePolish);
+  await expect(elementsPage.headingPloomXAdvancedBlue).toBeVisible();
+}
 
 export async function closeShopMenuIfVisible(page: Page): Promise<void> {
   if (
@@ -70,11 +68,10 @@ export async function closeShopMenuIfVisible(page: Page): Promise<void> {
   } else {
     console.log("'CloseShopMenu' element has not been found. Test goes on.");
   }
-};
+}
 
-export async function quantityMinus(page: Page): Promise<void> 
-{
-if (
+export async function quantityMinus(page: Page): Promise<void> {
+  if (
     await page
       .getByTestId("regular-cart-list")
       .getByTestId("quantityMinus")
@@ -89,22 +86,25 @@ if (
       "The quantity minus button is not available, test aborted."
     );
   }
-};
-
+}
 
 export async function quantityMinusPolish(page: Page): Promise<void> {
-  const button = page.getByTestId('regular-cart-list').getByTestId('quantityMinus');
+  const button = page
+    .getByTestId("regular-cart-list")
+    .getByTestId("quantityMinus");
 
-  await button.waitFor({ state: 'visible', timeout: 5000 });
+  await button.waitFor({ state: "visible", timeout: 5000 });
 
   await button.click();
 }
 
-
 import { expect } from "@playwright/test";
 import { SimpleElements } from "../pages/monogo-polish.page";
 
-export async function verifyAllLinksOnPage(page: Page, baseUrl: string): Promise<void> {
+export async function verifyAllLinksOnPage(
+  page: Page,
+  baseUrl: string
+): Promise<void> {
   // Gather all links
   const links = page.locator("a");
   const linkCount = await links.count();
@@ -142,15 +142,20 @@ export async function verifyAllLinksOnPage(page: Page, baseUrl: string): Promise
         // Assert the link should return 200
         expect(status).toBe(200);
       } else {
-        console.log(`⚠️ Link: ${fullHref} has incorrect protocol: ${url.protocol}`);
+        console.log(
+          `⚠️ Link: ${fullHref} has incorrect protocol: ${url.protocol}`
+        );
       }
     } catch (error) {
       console.log(`❌ Link: ${fullHref} has an invalid URL`);
     }
   }
-};
+}
 
-export async function gatherImagesCheckHowMany(page: Page, baseUrl: string): Promise<void> {
+export async function gatherImagesCheckHowMany(
+  page: Page,
+  baseUrl: string
+): Promise<void> {
   // gather all images
   const images = await page.locator("img");
 
@@ -187,8 +192,7 @@ export async function gatherImagesCheckHowMany(page: Page, baseUrl: string): Pro
       }
     }
   }
-};
-
+}
 
 export async function findInvalidLinks(page: Page): Promise<void> {
   const links = page.locator("a");
@@ -206,38 +210,41 @@ export async function findInvalidLinks(page: Page): Promise<void> {
   }
 }
 
-
-
-
 export async function collectAllLocators(page: Page): Promise<void> {
   // Pobierz wszystkie elementy na stronie
   const elements = await page.locator("*").all();
 
   for (const element of elements) {
-    const tagName = await element.evaluate(el => el.tagName.toLowerCase());
+    const tagName = await element.evaluate((el) => el.tagName.toLowerCase());
     const id = await element.getAttribute("id");
     const classes = await element.getAttribute("class");
     const name = await element.getAttribute("name");
-    const dataAttributes = await element.evaluate(el =>
+    const dataAttributes = await element.evaluate((el) =>
       Array.from(el.attributes)
-        .filter(attr => attr.name.startsWith("data-"))
-        .map(attr => `${attr.name}="${attr.value}"`)
+        .filter((attr) => attr.name.startsWith("data-"))
+        .map((attr) => `${attr.name}="${attr.value}"`)
     );
 
     // Budowanie lokatorów
     const locators: string[] = [];
     if (id) locators.push(`#${id}`); // CSS ID
-    if (classes) locators.push(...classes.split(" ").map(cls => `.${cls}`)); // CSS Class
+    if (classes) locators.push(...classes.split(" ").map((cls) => `.${cls}`)); // CSS Class
     if (name) locators.push(`[name="${name}"]`); // Name attribute
-    if (dataAttributes.length) locators.push(...dataAttributes.map(attr => `[${attr}]`)); // Data attributes
+    if (dataAttributes.length)
+      locators.push(...dataAttributes.map((attr) => `[${attr}]`)); // Data attributes
 
     // XPath dla każdego elementu
-    const xpath = await element.evaluate(el => {
+    const xpath = await element.evaluate((el) => {
       function getXPath(el: Element): string {
         if (!el.parentElement) return `/${el.tagName.toLowerCase()}`;
-        const siblings = Array.from(el.parentElement.children).filter(e => e.tagName === el.tagName);
-        const index = siblings.length > 1 ? `[${siblings.indexOf(el) + 1}]` : "";
-        return getXPath(el.parentElement) + `/${el.tagName.toLowerCase()}${index}`;
+        const siblings = Array.from(el.parentElement.children).filter(
+          (e) => e.tagName === el.tagName
+        );
+        const index =
+          siblings.length > 1 ? `[${siblings.indexOf(el) + 1}]` : "";
+        return (
+          getXPath(el.parentElement) + `/${el.tagName.toLowerCase()}${index}`
+        );
       }
       return getXPath(el);
     });
@@ -249,13 +256,12 @@ export async function collectAllLocators(page: Page): Promise<void> {
   }
 }
 
-
-
-
 // functions/checkImagesWithRelativeURLs.ts
 
-
-export async function checkImagesWithRelativeURLs(page: Page, baseUrl: string): Promise<void> {
+export async function checkImagesWithRelativeURLs(
+  page: Page,
+  baseUrl: string
+): Promise<void> {
   const images = await page.locator("img");
   const imageCount = await images.count();
 
@@ -276,8 +282,10 @@ export async function checkImagesWithRelativeURLs(page: Page, baseUrl: string): 
   }
 }
 
-
-export async function gatherImagesCheckHowManyPolish(page: Page, baseUrl: string): Promise<void> {
+export async function gatherImagesCheckHowManyPolish(
+  page: Page,
+  baseUrl: string
+): Promise<void> {
   // gather all images
   const images = await page.locator("img");
 
@@ -305,11 +313,10 @@ export async function gatherImagesCheckHowManyPolish(page: Page, baseUrl: string
     if (fullSrc) {
       const url = new URL(fullSrc);
       console.log(`🌐 Domeną obrazu jest: ${url.hostname}`);
-      
+
       // Check the image status
       const response = await page.request.get(fullSrc); // calling HTTP about img
       expect(response.status()).toBe(200); // should be 200 status
     }
   }
-};
-
+}
